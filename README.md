@@ -62,5 +62,21 @@ curl -X POST http://localhost:3001/api/send \\
   }'
 ```
 
+## 🌍 Cloud Deployment
+
+Relay Africa is structured as a monorepo. To deploy to the cloud, use the following recommended settings:
+
+### 1. Frontend (Next.js) - [Vercel](https://vercel.com)
+- **Root Directory**: `apps/web`
+- **Build Command**: `next build`
+- **Output Directory**: `.next`
+- **Environment Variables**: Add your API URL as `NEXT_PUBLIC_API_URL` if you aren't using the built-in proxy.
+
+### 2. Backend (Express) - [Render](https://render.com) or [Railway](https://railway.app)
+- **Root Directory**: `apps/api`
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm start`
+- **Environment Variables**: `DATABASE_URL`, `REDIS_URL`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`.
+
 ---
 Made for **Relay Africa**.

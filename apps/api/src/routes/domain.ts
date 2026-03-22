@@ -49,7 +49,7 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
 
 // 3. Verify a domain by ID
 router.post('/:id/verify', authMiddleware, async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const user = (req as any).user;
 
   try {
@@ -79,7 +79,7 @@ router.post('/:id/verify', authMiddleware, async (req: Request, res: Response) =
 
 // 4. Delete a domain
 router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const user = (req as any).user;
 
   try {

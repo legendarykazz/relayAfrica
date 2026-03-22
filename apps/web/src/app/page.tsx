@@ -297,7 +297,7 @@ await relay.send({
                </div>
             </div>
          </div>
-         <div style={{ marginTop: '6rem', pt: '2rem', borderTop: '1px solid rgba(255,255,255,0.03)', textAlign: 'center', color: '#64748b', fontSize: '0.8rem' }}>
+         <div style={{ marginTop: '6rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.03)', textAlign: 'center', color: '#64748b', fontSize: '0.8rem' }}>
             © 2026 Relay Africa. All rights reserved. Made in Lagos & Accra.
          </div>
       </footer>

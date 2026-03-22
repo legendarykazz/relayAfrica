@@ -120,20 +120,33 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
           </div>
           
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <button 
-               className={`btn-icon ${!showSidebars ? 'btn-primary' : 'glass'}`} 
-               onClick={() => setShowSidebars(!showSidebars)}
-               style={{ borderRadius: '0.8rem', width: '3rem', height: '3rem' }}
-               title="Focus Mode (Hide Panels)"
-            >
-               <Layout size={20} />
-            </button>
-            <div style={{ display: 'flex', background: 'rgba(255,255,255,0.03)', borderRadius: '0.8rem', padding: '0.4rem', border: '1px solid rgba(255,255,255,0.05)' }}>
-               <button className="btn-icon" style={{ borderRadius: '0.6rem', background: 'rgba(255,255,255,0.1)', height: '2.2rem', width: '2.2rem' }}><Smartphone size={18} /></button>
-               <button className="btn-icon" style={{ borderRadius: '0.6rem', marginLeft: '0.4rem', height: '2.2rem', width: '2.2rem' }}><Globe size={18} /></button>
+            <div style={{ position: 'relative' }}>
+              <button 
+                className={`btn-icon ${!showSidebars ? 'btn-primary' : 'glass'}`} 
+                onClick={() => setShowSidebars(!showSidebars)}
+                style={{ 
+                  borderRadius: '0.8rem', width: '3.5rem', height: '3.5rem',
+                  border: !showSidebars ? 'none' : '2px solid var(--primary)',
+                  boxShadow: !showSidebars ? 'none' : '0 0 15px rgba(99, 102, 241, 0.4)',
+                  animation: showSidebars ? 'pulse 2s infinite' : 'none'
+                }}
+                title="Focus Mode (Hide Panels)"
+              >
+                 <Layout size={24} />
+              </button>
+              {showSidebars && (
+                <div style={{ position: 'absolute', top: '-110%', left: '50%', transform: 'translateX(-50%)', background: 'var(--primary)', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.6rem', fontSize: '0.75rem', fontWeight: 900, whiteSpace: 'nowrap', pointerEvents: 'none' }}>
+                   CLICK FOR FULL SCREEN
+                </div>
+              )}
             </div>
-            <button className="btn btn-primary" style={{ padding: '0.8rem 2rem', borderRadius: '1rem', fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 8px 24px rgba(99, 102, 241, 0.3)' }} onClick={() => onSelect?.(selectedTemplate)}>
-              Send & Launch
+
+            <div style={{ display: 'flex', background: 'rgba(255,255,255,0.03)', borderRadius: '0.8rem', padding: '0.4rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+               <button className="btn-icon" style={{ borderRadius: '0.6rem', background: 'rgba(255,255,255,0.1)', height: '2.5rem', width: '2.5rem' }}><Smartphone size={20} /></button>
+               <button className="btn-icon" style={{ borderRadius: '0.6rem', marginLeft: '0.4rem', height: '2.5rem', width: '2.5rem' }}><Globe size={20} /></button>
+            </div>
+            <button className="btn btn-primary" style={{ padding: '0.8rem 2.5rem', borderRadius: '1rem', fontWeight: 900, fontSize: '1rem', boxShadow: '0 8px 30px rgba(99, 102, 241, 0.4)' }} onClick={() => onSelect?.(selectedTemplate)}>
+              Publish Now
             </button>
           </div>
         </div>
@@ -143,10 +156,44 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
           gridTemplateColumns: showSidebars ? '300px 1fr 300px' : '0 1fr 0', 
           gap: showSidebars ? '2rem' : '0', 
           flexGrow: 1, 
-          transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          minHeight: 0 
+          transition: '0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          minHeight: 0,
+          position: 'relative'
         }}>
           
+          {/* FLOATING QUICK-EDIT (Visible in Focus Mode) */}
+          {!showSidebars && (
+            <div className="animate-fade-in" style={{ 
+               position: 'fixed', top: '15rem', right: '4rem', zIndex: 100,
+               display: 'flex', flexDirection: 'column', gap: '1rem'
+            }}>
+               <div className="glass" style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid var(--primary)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
+                  <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 900, color: '#94a3b8', marginBottom: '0.5rem' }}>QUICK URL</label>
+                  <input 
+                    type="text" 
+                    value={buttonLink} 
+                    onChange={(e) => setButtonLink(e.target.value)}
+                    style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '0.4rem 0', outline: 'none', width: '150px' }}
+                  />
+               </div>
+               <div className="glass" style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid var(--primary)', textAlign: 'center' }}>
+                  <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 900, color: '#94a3b8', marginBottom: '0.8rem' }}>THEME</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
+                    {["#6366f1", "#4f46e5", "#ec4899", "#10b981"].map(c => (
+                      <div 
+                        key={c} 
+                        onClick={() => setAccentColor(c)}
+                        style={{ width: '24px', height: '24px', borderRadius: '4px', background: c, cursor: 'pointer', border: accentColor === c ? '2px solid white' : 'none' }} 
+                      />
+                    ))}
+                  </div>
+               </div>
+               <button onClick={() => setShowSidebars(true)} className="btn btn-primary" style={{ padding: '0.8rem', borderRadius: '1rem' }}>
+                 <ArrowLeft size={20} />
+               </button>
+            </div>
+          )}
+
           {/* 1. COMPONENTS PANEL */}
           <div className="panel glass" style={{ padding: '2rem', overflowY: 'auto', borderRadius: '1.8rem', opacity: showSidebars ? 1 : 0, pointerEvents: showSidebars ? 'all' : 'none', transition: '0.3s' }}>
             <h4 style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748b', marginBottom: '1.8rem' }}>Add Blocks</h4>
@@ -175,14 +222,14 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
             display: 'flex', flexDirection: 'column', overflowY: 'auto', background: '#0a0f1e', 
             borderRadius: showSidebars ? '2.5rem' : '1rem', border: '1px solid rgba(255,255,255,0.03)', padding: '3rem 0', 
             position: 'relative', boxShadow: 'inset 0 0 100px rgba(0,0,0,0.5)', 
-            transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+            transition: '0.5s cubic-bezier(0.4, 0, 0.2, 1)'
           }}>
              {/* Dynamic Canvas width for Focus Mode */}
              <div style={{ 
                width: '100%', maxWidth: showSidebars ? '850px' : '950px', margin: '0 auto', background: '#ffffff', 
                boxShadow: '0 50px 120px rgba(0,0,0,0.8)', borderRadius: '4px', 
                minHeight: '1300px', display: 'flex', flexDirection: 'column',
-               transition: '0.4s'
+               transition: '0.5s'
              }}>
                 <div style={{ height: '8px', background: accentColor }}></div>
                 

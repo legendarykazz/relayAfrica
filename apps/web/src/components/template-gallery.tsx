@@ -3,34 +3,44 @@ import { Layout, Palette, Type, MousePointer2, Check, ArrowLeft, Image as ImageI
 
 const PRESET_TEMPLATES = [
   {
-    id: "classy",
-    name: "Classic Elegance",
-    tag: "Transactional",
+    id: "corporate-bold",
+    name: "Corporate Nexus",
+    tag: "Finance",
     category: "Business",
-    isPro: false,
-    preview: "/templates/classy.png",
-    colors: ["#1e293b", "#ffffff", "#f8fafc"],
-    description: "Serif typography and refined spacing for high-end corporate communication."
+    isPro: true,
+    preview: "/templates/nexus.png",
+    colors: ["#2563eb", "#0f172a", "#f8fafc"],
+    description: "High-impact blue theme with icon-driven feature grids and professional trust elements."
+  },
+  {
+    id: "resort-immersive",
+    name: "Aura Resort",
+    tag: "Hospitality",
+    category: "Landing Page",
+    isPro: true,
+    preview: "/templates/aura.png",
+    colors: ["#7c3aed", "#2d1b4e", "#ffffff"],
+    description: "Deep violet palette with overlapping image cards and immersive luxury vibes."
+  },
+  {
+    id: "ecom-pro",
+    name: "Mailto Prime",
+    tag: "Ecommerce",
+    category: "System",
+    isPro: true,
+    preview: "/templates/mailto.png",
+    colors: ["#000000", "#ffffff", "#f1f5f9"],
+    description: "Clean, structured ecommerce layout for high-clarity transactional messaging."
   },
   {
     id: "founders-update",
     name: "Founder's Memo",
     tag: "Newsletter",
     category: "Personal",
-    isPro: true,
+    isPro: false,
     preview: "/templates/founder.png",
     colors: ["#0f172a", "#f8fafc", "#ffffff"],
     description: "A sophisticated, personal-touch template for important leadership updates."
-  },
-  {
-    id: "newsletter",
-    name: "Modern Pulse",
-    tag: "Newsletter",
-    category: "Marketing",
-    isPro: false,
-    preview: "/templates/newsletter.png",
-    colors: ["#6366f1", "#ffffff", "#f1f5f9"],
-    description: "Balanced multi-column layout optimized for readability and engagement."
   },
   {
     id: "launch",
@@ -41,26 +51,6 @@ const PRESET_TEMPLATES = [
     preview: "/templates/launch.png",
     colors: ["#4f46e5", "#ec4899", "#0f172a"],
     description: "High-impact gradients and bold call-to-actions inspired by modern landing pages."
-  },
-  {
-    id: "ecom-sale",
-    name: "Flash Wave",
-    tag: "Ecommerce",
-    category: "Marketing",
-    isPro: false,
-    preview: "/templates/sale.png",
-    colors: ["#ef4444", "#fef2f2", "#ffffff"],
-    description: "Urgent, conversion-focused design for sales and limited-time offers."
-  },
-  {
-    id: "abandoned-cart",
-    name: "Retrieve Pro",
-    tag: "Ecommerce",
-    category: "System",
-    isPro: true,
-    preview: "/templates/abandoned.png",
-    colors: ["#10b981", "#ecfdf5", "#ffffff"],
-    description: "Proven layout to recover lost revenue from abandoned shopping carts."
   },
   {
     id: "transactional",
@@ -171,43 +161,79 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
              }}>
                 {/* Immersive Header Indicator */}
                 <div style={{ height: '8px', background: accentColor }}></div>
-                
-                <div style={{ padding: '5rem 6rem' }}>
-                   <div className="edit-block" style={{ marginBottom: '4rem', fontFamily: selectedTemplate.id === 'classy' ? 'serif' : 'inherit' }}>
-                      <h1 style={{ fontSize: '4.5rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, letterSpacing: '-0.04em', margin: 0 }}>
-                        {selectedTemplate.name === 'Classic Elegance' ? 'A Timeless Message' : 'Welcome to the Future of Cloud Messaging'}
-                      </h1>
-                   </div>
+                               <div style={{ padding: '0 0 5rem 0' }}>
+                   {/* 1. DYNAMIC HERO SECTION */}
+                   {selectedTemplate.id === 'corporate-bold' && (
+                     <div style={{ background: '#2563eb', padding: '6rem 4rem', color: 'white' }}>
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem', opacity: 0.8 }}>
+                           <Globe size={24} /> <span style={{ fontWeight: 800, fontSize: '1rem', letterSpacing: '0.1em' }}>NEXUS FINANCE</span>
+                        </div>
+                        <h1 style={{ fontSize: '4rem', fontWeight: 900, lineHeight: 1.1, marginBottom: '2rem' }}>We keep our promises to you.</h1>
+                        <p style={{ fontSize: '1.2rem', opacity: 0.9, marginBottom: '3rem', maxWidth: '500px' }}>
+                          Scale your financial infrastructure with Africa's most reliable messaging stack.
+                        </p>
+                        <button style={{ background: 'white', color: '#2563eb', border: 'none', padding: '1.5rem 4rem', fontWeight: 900, borderRadius: '4px' }}>GET STARTED</button>
+                     </div>
+                   )}
 
-                   <div className="edit-block" style={{ marginBottom: '4rem' }}>
-                      <div style={{ width: '100%', height: '450px', background: '#f8fafc', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #f1f5f9' }}>
-                         <ImageIcon size={64} color="#cbd5e1" />
-                      </div>
-                   </div>
+                   {selectedTemplate.id === 'resort-immersive' && (
+                     <div style={{ background: '#2d1b4e', padding: '0 0 4rem 0' }}>
+                        <div style={{ position: 'relative', height: '500px', background: 'url(https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80)', backgroundSize: 'cover', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(45,27,78,0.2), rgba(45,27,78,0.8))' }}></div>
+                           <div style={{ position: 'relative', textAlign: 'center', color: 'white', padding: '0 2rem' }}>
+                              <h1 style={{ fontSize: '4.5rem', fontWeight: 900, lineHeight: 1, marginBottom: '1.5rem' }}>Capture Your Memories Here.</h1>
+                              <button style={{ background: '#7c3aed', color: 'white', border: 'none', padding: '1.2rem 3rem', fontWeight: 800, borderRadius: '4px' }}>BOOKING NOW</button>
+                           </div>
+                        </div>
+                        <div style={{ padding: '4rem 4rem 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                           <div className="edit-block" style={{ padding: '2rem', background: 'white', color: '#0f172a', borderRadius: '4px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+                              <h3 style={{ fontSize: '1.5rem', fontWeight: 900 }}>$300 / NIGHT</h3>
+                              <p style={{ color: '#64748b' }}>Luxury Mediterranean View with Infinity Pool Access.</p>
+                           </div>
+                           <div style={{ background: 'url(https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80)', backgroundSize: 'cover', borderRadius: '4px' }}></div>
+                        </div>
+                     </div>
+                   )}
 
-                   <div className="edit-block" style={{ marginBottom: '5rem' }}>
-                      <p style={{ color: '#475569', fontSize: '1.4rem', lineHeight: 1.6, margin: 0 }}>
-                        Your story deserves to be heard. Use this premium WordPress-inspired preset to build stunning email experiences for your audience. 
-                        Relay Africa's infrastructure ensures that every pixel you design here arrives exactly as intended.
-                      </p>
-                   </div>
+                   {selectedTemplate.id === 'ecom-pro' && (
+                     <div style={{ padding: '4rem 6rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4rem' }}>
+                           <div style={{ background: '#f1f5f9', padding: '1rem 2rem', borderRadius: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                              <Smartphone size={20} /> <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>Mailto Prime</span>
+                           </div>
+                        </div>
+                        <h1 style={{ fontSize: '3rem', fontWeight: 900, color: '#0f172a', textAlign: 'center', marginBottom: '1.5rem' }}>Thanks for your order!</h1>
+                        <p style={{ textAlign: 'center', color: '#64748b', fontSize: '1.2rem', marginBottom: '4rem' }}>
+                          We've received your payment and are processing it with care.
+                        </p>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', borderTop: '2px solid #f1f5f9', paddingTop: '3rem' }}>
+                           <div>
+                              <h4 style={{ fontWeight: 900, marginBottom: '1rem' }}>Order Number</h4>
+                              <p style={{ color: '#2563eb', fontWeight: 700 }}>#US6356801</p>
+                           </div>
+                           <div>
+                              <h4 style={{ fontWeight: 900, marginBottom: '1rem' }}>Shipping Address</h4>
+                              <p style={{ color: '#64748b' }}>123 Tech Hub, Lagos, Nigeria</p>
+                           </div>
+                        </div>
+                     </div>
+                   )}
 
-                   <div className="edit-block" style={{ marginBottom: '6rem', textAlign: 'center' }}>
-                      <button style={{ 
-                        background: accentColor, color: '#ffffff', border: 'none', padding: '1.8rem 5rem', 
-                        borderRadius: '0', fontWeight: 900, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.1em'
-                      }}>
-                        Claim Your Access
-                      </button>
-                   </div>
-
-                   <div style={{ marginTop: '10rem', paddingTop: '5rem', borderTop: '2.5px solid #0f172a', textAlign: 'center' }}>
-                      <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0f172a', marginBottom: '1rem', letterSpacing: '-0.02em' }}>Relay Africa</div>
-                      <p style={{ color: '#94a3b8', fontSize: '1rem', margin: 0 }}>
-                        Building the internet infrastructure for Africa. <br/>
-                        123 Tech Hub, Lagos • hello@relay.africa
-                      </p>
-                   </div>
+                   {!['corporate-bold', 'resort-immersive', 'ecom-pro'].includes(selectedTemplate.id) && (
+                     <div style={{ padding: '5rem 6rem' }}>
+                        <div className="edit-block" style={{ marginBottom: '4rem', fontFamily: selectedTemplate.id === 'classy' ? 'serif' : 'inherit' }}>
+                           <h1 style={{ fontSize: '4.5rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, letterSpacing: '-0.04em', margin: 0 }}>
+                             {selectedTemplate.name} — A New Chapter.
+                           </h1>
+                        </div>
+                        <div className="edit-block" style={{ marginBottom: '4rem' }}>
+                           <div style={{ width: '100%', height: '450px', background: '#f8fafc', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #f1f5f9' }}>
+                              <ImageIcon size={64} color="#cbd5e1" />
+                           </div>
+                        </div>
+                        <p style={{ color: '#475569', fontSize: '1.4rem', lineHeight: 1.6 }}>{selectedTemplate.description}</p>
+                     </div>
+                   )}
                 </div>
              </div>
           </div>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { 
   Mail, ShieldCheck, Zap, Globe, MessageSquare, ArrowRight, 
   ChevronRight, BarChart3, Lock, Coins, Check, Code, 
-  Server, Smartphone, Layers, HelpCircle, Twitter, Github, Key
+  Server, Smartphone, Layers, HelpCircle, Twitter, Github, Key, Terminal
 } from "lucide-react";
 import TypingEffect from "@/components/typing-effect";
 
@@ -169,6 +169,64 @@ export default function Home() {
                 </div>
              </div>
            </div>
+        </div>
+      </section>
+
+      {/* 5. SOLUTIONS SECTION */}
+      <section style={{ padding: '10rem 1rem', background: 'rgba(2, 6, 23, 0.4)' }}>
+        <div className="max-w-7xl">
+          <div style={{ textAlign: 'center', marginBottom: '8rem' }}>
+            <h2 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '2rem' }}>Solutions for every stage of your business.</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '700px', margin: '0 auto' }}>
+              Whether you're sending your first OTP or managing millions of customer interactions, our infrastructure scales with you.
+            </p>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '4rem' }}>
+            {[
+              { 
+                title: "Transactional Messaging", 
+                desc: "Critical messages that your users expect instantly. Perfect for OTPs, receipts, and order confirmations.", 
+                icon: Zap, 
+                color: 'var(--primary)',
+                points: ["99.99% Delivery Rate", "Global Low-Latency"]
+              },
+              { 
+                title: "Marketing & Campaigns", 
+                desc: "Engage your audience with beautifully designed newsletters. Send at scale without worrying about spam filters.", 
+                icon: Mail, 
+                color: '#ec4899',
+                points: ["Drag-and-drop Editor", "Advanced Segmentation"]
+              },
+              { 
+                title: "Inbound Communications", 
+                desc: "Receive and process incoming emails from your customers. Perfect for support ticketing and automated surveys.", 
+                icon: MessageSquare, 
+                color: '#10b981',
+                points: ["Webhook Notifications", "Automatic Parsing"]
+              },
+              { 
+                title: "Developer Experience", 
+                desc: "Built by developers, for developers. Simple APIs, robust SDKs, and transparent logs.", 
+                icon: Terminal, 
+                color: '#8b5cf6',
+                points: ["One-line Integration", "Real-time Logs"]
+              }
+            ].map((s, i) => (
+              <div key={i} className="glass" style={{ padding: '4rem', borderRadius: '3rem', border: '1px solid var(--glass-border)' }}>
+                <div style={{ color: s.color, marginBottom: '2rem' }}><s.icon size={40} /></div>
+                <h3 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: '1.5rem' }}>{s.title}</h3>
+                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '2rem' }}>{s.desc}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {s.points.map((p, j) => (
+                    <div key={j} style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                      <Check size={18} style={{ color: s.color }} /> {p}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

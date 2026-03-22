@@ -131,18 +131,18 @@ export default function Home() {
         <div className="max-w-7xl">
            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '8rem', alignItems: 'center' }}>
              <div>
-                <h2 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '2rem' }}>Developer first. <br/>Always.</h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '2rem', letterSpacing: '-0.03em' }}>Developer first. <br/>Always.</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
                   {[
                     { step: "01", title: "Generate API Keys", desc: "Get live in seconds with our intuitive dashboard and instant key generation." },
                     { step: "02", title: "Integrate SDK", desc: "Use our lightweight Node.js or Python SDKs, or hit our clean REST API directly." },
                     { step: "03", title: "Scale Effortlessly", desc: "We handle the massive scale so you can focus on building your product." }
                   ].map((s, i) => (
                     <div key={i} style={{ display: 'flex', gap: '2rem' }}>
-                      <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--primary)', opacity: 0.3 }}>{s.step}</div>
+                      <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', opacity: 0.3, width: '3rem' }}>{s.step}</div>
                       <div>
-                        <h4 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>{s.title}</h4>
-                        <p style={{ color: 'var(--text-secondary)' }}>{s.desc}</p>
+                        <h4 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.4rem' }}>{s.title}</h4>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>{s.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -150,22 +150,21 @@ export default function Home() {
              </div>
              
              <div className="glass animate-fade" style={{ borderRadius: '2rem', padding: '0.5rem', background: 'rgba(2, 6, 23, 0.4)' }}>
-                <div style={{ background: '#0f172a', borderRadius: '1.5rem', padding: '3rem', border: '1px solid var(--glass-border)' }}>
-                  <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-                    <div style={{ padding: '0.4rem 1rem', borderRadius: '0.5rem', background: 'rgba(79, 70, 229, 0.1)', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700 }}>Node.js</div>
-                    <div style={{ padding: '0.4rem 1rem', borderRadius: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700 }}>Python</div>
-                    <div style={{ padding: '0.4rem 1rem', borderRadius: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700 }}>Go</div>
+                <div style={{ background: '#0f172a', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)' }}>
+                  <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '2rem' }}>
+                    <div style={{ padding: '0.4rem 1rem', borderRadius: '0.6rem', background: 'rgba(79, 70, 229, 0.15)', color: 'var(--primary)', fontSize: '0.75rem', fontWeight: 700 }}>Node.js</div>
+                    <div style={{ padding: '0.4rem 1rem', borderRadius: '0.6rem', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700 }}>Python</div>
+                    <div style={{ padding: '0.4rem 1rem', borderRadius: '0.6rem', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700 }}>Go</div>
                   </div>
-                  <pre style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: 1.8 }}>
-{`<span style={{ color: '#6366f1' }}>const</span> Relay = <span style={{ color: '#eab308' }}>require</span>(<span style={{ color: '#4ade80' }}>'relay-africa'</span>);
-<span style={{ color: '#6366f1' }}>const</span> client = <span style={{ color: '#6366f1' }}>new</span> <span style={{ color: '#eab308' }}>Relay</span>(<span style={{ color: '#4ade80' }}>'pk_live_...'</span>);
-
-<span style={{ color: '#6366f1' }}>await</span> client.<span style={{ color: '#38bdf8' }}>emails</span>.<span style={{ color: '#38bdf8' }}>send</span>({
-  from: <span style={{ color: '#4ade80' }}>'Relay Africa &lt;hello@relay.africa&gt;'</span>,
-  to: <span style={{ color: '#4ade80' }}>'founder@startup.io'</span>,
-  subject: <span style={{ color: '#4ade80' }}>'Scale your startup'</span>,
-  text: <span style={{ color: '#4ade80' }}>'Local delivery, global reach.'</span>
-});`}
+                  <pre style={{ color: '#f8fafc', fontSize: '0.9rem', lineHeight: 1.7, border: 'none', background: 'transparent' }}>
+                    <span style={{ color: '#6366f1' }}>{"const"}</span> Relay = <span style={{ color: '#eab308' }}>{"require"}</span>(<span style={{ color: '#4ade80' }}>{"'relay-africa'"}</span>);{"\n"}
+                    <span style={{ color: '#6366f1' }}>{"const"}</span> client = <span style={{ color: '#6366f1' }}>{"new"}</span> <span style={{ color: '#eab308' }}>{"Relay"}</span>(<span style={{ color: '#4ade80' }}>{"'pk_live_...'"}</span>);{"\n\n"}
+                    <span style={{ color: '#6366f1' }}>{"await"}</span> client.<span style={{ color: '#38bdf8' }}>{"emails"}</span>.<span style={{ color: '#38bdf8' }}>{"send"}</span>({'{'}{"\n"}
+                    {"  "}from: <span style={{ color: '#4ade80' }}>{"'Relay Africa <hello@relay.africa>'"}</span>,{"\n"}
+                    {"  "}to: <span style={{ color: '#4ade80' }}>{"'founder@startup.io'"}</span>,{"\n"}
+                    {"  "}subject: <span style={{ color: '#4ade80' }}>{"'Scale your startup'"}</span>,{"\n"}
+                    {"  "}text: <span style={{ color: '#4ade80' }}>{"'Local delivery, global reach.'"}</span>{"\n"}
+                    {'}'});
                   </pre>
                 </div>
              </div>

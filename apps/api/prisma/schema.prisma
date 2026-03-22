@@ -128,6 +128,7 @@ model Campaign {
   templateId     String
   template       Template     @relation(fields: [templateId], references: [id])
   name           String
+  fromAddress    String?
   status         String       @default("DRAFT") // DRAFT, QUEUED, SENDING, COMPLETED
   sentCount      Int          @default(0)
   createdAt      DateTime     @default(now())

@@ -19,6 +19,7 @@ export default function DomainManager({ apiKey }: { apiKey: string }) {
   const [registering, setRegistering] = useState(false);
   const [verifyingId, setVerifyingId] = useState<string | null>(null);
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function DomainManager({ apiKey }: { apiKey: string }) {
   const registerDomain = async () => {
     if (!newDomain) return;
     setRegistering(true);
+    setError(null);
     try {
       const res = await fetch("/api/domain", {
         method: "POST",
@@ -51,13 +53,17 @@ export default function DomainManager({ apiKey }: { apiKey: string }) {
         },
         body: JSON.stringify({ name: newDomain }),
       });
+      const data = await res.json();
+      
       if (res.ok) {
-        const domain = await res.json();
-        setDomains([...domains, domain]);
+        setDomains([...domains, data]);
         setNewDomain("");
-        setSelectedDomain(domain);
+        setSelectedDomain(data);
+      } else {
+        setError(data.error || "Failed to register domain");
       }
     } catch (error) {
+      setError("Network error. Is the API server running?");
       console.error("Register Domain Error:", error);
     } finally {
       setRegistering(false);
@@ -133,6 +139,11 @@ export default function DomainManager({ apiKey }: { apiKey: string }) {
                    {registering ? <Loader2 className="animate-spin" size={20} /> : "Register Domain"}
                 </button>
              </div>
+             {error && (
+               <div className="animate-fade" style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ef4444', fontSize: '0.85rem', fontWeight: 600 }}>
+                  <AlertCircle size={16} /> {error}
+               </div>
+             )}
           </div>
 
           {/* Domain List */}

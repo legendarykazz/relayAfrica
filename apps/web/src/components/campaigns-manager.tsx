@@ -9,9 +9,11 @@ export default function CampaignsManager({ apiKey, initialData }: { apiKey: stri
   // New Campaign State
   const [showNew, setShowNew] = useState(!!initialData);
   const [launching, setLaunching] = useState(false);
+  const [domains, setDomains] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
     audienceListId: "",
+    fromAddress: "", // Selected verified sender
     subject: initialData?.subject || "",
     html: initialData?.html || ""
   });
@@ -22,6 +24,7 @@ export default function CampaignsManager({ apiKey, initialData }: { apiKey: stri
       setFormData({
         name: initialData.name,
         audienceListId: audienceListId || "",
+        fromAddress: "",
         subject: initialData.subject,
         html: initialData.html
       });
@@ -33,15 +36,26 @@ export default function CampaignsManager({ apiKey, initialData }: { apiKey: stri
 
   const fetchCampaigns = async () => {
     try {
-      const [campRes, listsRes] = await Promise.all([
+      const [campRes, listsRes, domainsRes] = await Promise.all([
         fetch("/api/campaigns", { headers: { Authorization: `Bearer ${apiKey}` } }),
-        fetch("/api/contacts/lists", { headers: { Authorization: `Bearer ${apiKey}` } })
+        fetch("/api/contacts/lists", { headers: { Authorization: `Bearer ${apiKey}` } }),
+        fetch("/api/domain", { headers: { Authorization: `Bearer ${apiKey}` } })
       ]);
       setCampaigns(await campRes.json());
       const fetchedLists = await listsRes.json();
       setLists(fetchedLists);
+
+      const fetchedDomains = await domainsRes.json();
+      const verifiedDomains = Array.isArray(fetchedDomains) ? fetchedDomains.filter((d: any) => d.verifiedAt) : [];
+      setDomains(verifiedDomains);
+
       if (fetchedLists.length > 0 && !formData.audienceListId) {
         setFormData(prev => ({...prev, audienceListId: fetchedLists[0].id}));
+      }
+
+      if (verifiedDomains.length > 0 && !formData.fromAddress) {
+        // Default to the first verified domain's hello@ address
+        setFormData(prev => ({...prev, fromAddress: `marketing@${verifiedDomains[0].name}`}));
       }
     } catch (e) {
       console.error(e);
@@ -77,7 +91,12 @@ export default function CampaignsManager({ apiKey, initialData }: { apiKey: stri
       const launchRes = await fetch("/api/campaigns/launch", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-        body: JSON.stringify({ name: formData.name, audienceListId: formData.audienceListId, templateId: template.id })
+        body: JSON.stringify({ 
+          name: formData.name, 
+          audienceListId: formData.audienceListId, 
+          templateId: template.id,
+          fromAddress: formData.fromAddress
+        })
       });
       const result = await launchRes.json();
       
@@ -85,7 +104,7 @@ export default function CampaignsManager({ apiKey, initialData }: { apiKey: stri
 
       setFeedback({ type: 'success', msg: `Campaign queued! Dispatching to ${result.contactsQueued} contacts.` });
       setShowNew(false);
-      setFormData({ name: "", audienceListId: lists[0]?.id || "", subject: "", html: "" });
+      setFormData({ name: "", audienceListId: lists[0]?.id || "", fromAddress: "", subject: "", html: "" });
       fetchCampaigns();
     } catch (e: any) {
       setFeedback({ type: 'error', msg: e.message || "Failed to launch campaign" });
@@ -129,6 +148,35 @@ export default function CampaignsManager({ apiKey, initialData }: { apiKey: stri
              <div>
                <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Internal Name</label>
                <input type="text" className="input-styled" placeholder="Q1 Newsletter..." value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+             </div>
+
+             <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Verified Sender Address</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input 
+                    type="text" 
+                    className="input-styled" 
+                    placeholder="marketing" 
+                    value={formData.fromAddress.split('@')[0]} 
+                    onChange={e => setFormData({...formData, fromAddress: `${e.target.value}@${formData.fromAddress.split('@')[1] || (domains[0]?.name || '')}`})}
+                    style={{ flex: 1 }}
+                  />
+                  <div style={{ alignSelf: 'center', color: '#64748b' }}>@</div>
+                  <select 
+                    className="input-styled" 
+                    value={formData.fromAddress.split('@')[1]} 
+                    onChange={e => setFormData({...formData, fromAddress: `${formData.fromAddress.split('@')[0]}@${e.target.value}`})}
+                    style={{ flex: 2, appearance: 'none', backgroundColor: '#0f172a' }}
+                  >
+                    {domains.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                    {domains.length === 0 && <option value="">No verified domains</option>}
+                  </select>
+                </div>
+                {domains.length === 0 && (
+                   <p style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '0.4rem' }}>
+                     You must verify a domain in "Infrastructure" to send campaigns.
+                   </p>
+                )}
              </div>
 
              <div>

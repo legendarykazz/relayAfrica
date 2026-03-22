@@ -26,6 +26,11 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
   if (!name) return res.status(400).json({ error: 'Domain name is required' });
 
   try {
+    // Check if domain name is valid format
+    if (!name.includes('.')) {
+      return res.status(400).json({ error: 'Invalid domain format. Use e.g. domain.com' });
+    }
+
     const domain = await prisma.domain.create({
       data: {
         name,
@@ -33,8 +38,12 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
       }
     });
     res.status(201).json(domain);
-  } catch (error) {
-    res.status(400).json({ error: 'Domain already exists or invalid' });
+  } catch (error: any) {
+    console.error('Domain Creation Error:', error);
+    if (error.code === 'P2002') {
+      return res.status(400).json({ error: 'This domain is already registered.' });
+    }
+    res.status(500).json({ error: 'Internal database error. Please try again.' });
   }
 });
 

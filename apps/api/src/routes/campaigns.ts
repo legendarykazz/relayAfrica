@@ -57,13 +57,36 @@ router.post('/templates', authMiddleware, async (req: Request, res: Response) =>
 // CREATE and LAUNCH a campaign
 router.post('/launch', authMiddleware, async (req: Request, res: Response) => {
   const user = (req as any).user;
-  const { name, audienceListId, templateId } = req.body;
+  const { name, audienceListId, templateId, fromAddress } = req.body;
 
   if (!name || !audienceListId || !templateId) {
     return res.status(400).json({ error: 'Missing required campaign parameters' });
   }
 
   try {
+    // 0. Verify 'fromAddress' domain if provided
+    let senderEmail = process.env.AWS_SES_FROM_ADDRESS || 'noreply@relay.africa';
+    if (fromAddress) {
+      const fromDomain = fromAddress.split('@')[1];
+      if (!fromAddress.includes('@') || !fromDomain) {
+        return res.status(400).json({ error: 'Invalid from address format' });
+      }
+
+      const verifiedDomain = await prisma.domain.findFirst({
+        where: {
+          userId: user.id,
+          name: fromDomain,
+          verifiedAt: { not: null }
+        }
+      });
+
+      if (!verifiedDomain) {
+        return res.status(403).json({ 
+          error: `Domain '${fromDomain}' is not verified. Please verify it in your dashboard first.` 
+        });
+      }
+      senderEmail = fromAddress;
+    }
     // 1. Fetch contacts
     const contacts = await prisma.contact.findMany({
       where: { audienceListId }
@@ -83,6 +106,7 @@ router.post('/launch', authMiddleware, async (req: Request, res: Response) => {
         name,
         audienceListId,
         templateId,
+        fromAddress: senderEmail,
         status: 'QUEUED',
         sentCount: 0
       }
@@ -105,6 +129,7 @@ router.post('/launch', authMiddleware, async (req: Request, res: Response) => {
         to: contact.email,
         subject: template.subject,
         html: template.html,
+        from: senderEmail,
         campaignId: campaign.id
       });
     }

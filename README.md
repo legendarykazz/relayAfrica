@@ -1,4 +1,16 @@
-# 🛰️ Relay Africa Setup Guide
+# 🛰️ Relay Africa: Multi-Channel Messaging & CRM Platform
+
+Relay Africa is a powerful, self-hosted messaging infrastructure designed to handle **Email (Amazon SES)**, **SMS**, and **WhatsApp (Twilio)** with ease. It features a built-in CRM for managing audience lists and a visual Campaign Builder for dispatching bulk HTML emails.
+
+## 🚀 Key Features
+- **Multi-Channel API**: A unified interface to send Email, SMS, and WhatsApp messages.
+- **WhatsApp OTP / 2FA**: Secure your users with automated WhatsApp and Email verification codes.
+- **Audience Management (CRM)**: Create and manage custom contact lists (Subscribers, Internal Teams, etc.).
+- **Email Campaign Builder**: Design rich HTML emails and dispatch them to thousands of recipients in real-time.
+- **Delivery Monitoring**: Live logs of every message sent, including status tracking and content previews.
+- **Infrastructure**: Powered by Amazon SES, Twilio, Redis, and PostgreSQL.
+
+## 🛠️ Setup Guide
 
 Follow these steps to make your Relay Africa instance fully functional.
 

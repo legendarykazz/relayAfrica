@@ -91,7 +91,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.listen(Number(port), '0.0.0.0', () => {
-  console.log(`Server is running on http://0.0.0.0:${port}`);
+app.listen(Number(port), '127.0.0.1', () => {
+  console.log(`Server is running on http://127.0.0.1:${port}`);
   process.stdout.write('--- SERVER_IS_DEFINITIVELY_UP ---\n');
 });

@@ -24,58 +24,59 @@ export default function Home() {
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: 'rgba(79, 70, 229, 0.1)', border: '1px solid rgba(79, 70, 229, 0.2)', borderRadius: '100rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '2rem' }}>
               <Zap size={16} /> <span>Now active in 12 African countries</span>
             </div>
-            <h1 style={{ fontSize: '5rem', lineHeight: 1, fontWeight: 800, marginBottom: '2rem', letterSpacing: '-0.04em' }}>
+            <h1 style={{ fontSize: '4rem', lineHeight: 1.1, fontWeight: 800, marginBottom: '2rem', letterSpacing: '-0.04em' }}>
               Send emails that <br/>
               <span style={{ background: 'linear-gradient(to right, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>actually land.</span>
             </h1>
-            <div style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', marginBottom: '3.5rem', maxWidth: '580px', lineHeight: 1.8 }}>
+            <div style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '3.5rem', maxWidth: '580px', lineHeight: 1.7 }}>
               The first email infrastructure layer <TypingEffect /> built specifically for the unique connectivity challenges of the African continent.
             </div>
             <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-              <a href="/dashboard" className="btn btn-primary" style={{ padding: '1.4rem 3rem', fontSize: '1.1rem' }}>
+              <a href="/dashboard" className="btn btn-primary" style={{ padding: '1.2rem 2.5rem', fontSize: '1rem' }}>
                 Start Sending Free <ArrowRight size={20} />
               </a>
-              <button className="btn btn-secondary" style={{ padding: '1.4rem 3rem', fontSize: '1.1rem' }}>
+              <button className="btn btn-secondary" style={{ padding: '1.2rem 2.5rem', fontSize: '1rem' }}>
                 Explore API
               </button>
             </div>
-            <div style={{ marginTop: '3rem', display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+            <div style={{ marginTop: '3rem', display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
               <div style={{ display: 'flex' }}>
                 {[1,2,3].map(i => (
                   <div key={i} style={{ width: '2rem', height: '2rem', borderRadius: '50%', border: '2px solid var(--bg-main)', background: '#1e293b', marginLeft: i > 1 ? '-0.75rem' : 0 }}></div>
                 ))}
               </div>
-              <span>Trusted by 500+ developers</span>
+              <span>Trusted by 500+ developers across Africa</span>
             </div>
           </div>
           
           <div className="animate-fade delay-2">
             <div className="glass" style={{ borderRadius: '2rem', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: '0 40px 100px rgba(0,0,0,0.6)' }}>
-              <div style={{ padding: '1.2rem 2rem', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ padding: '1rem 1.5rem', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', gap: '0.6rem' }}>
-                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f57' }}></div>
-                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#febc2e' }}></div>
-                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#28c840' }}></div>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ff5f57' }}></div>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#febc2e' }}></div>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#28c840' }}></div>
                 </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>terminal — relay-africa</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>terminal — relay-africa</div>
               </div>
-              <div style={{ padding: '2.5rem', background: 'rgba(2, 6, 23, 0.5)' }}>
-                <pre style={{ color: '#f8fafc', fontSize: '0.95rem', lineHeight: 1.7, overflowX: 'auto' }}>
-{`<span style={{ color: '#94a3b8' }}>// Fast, reliable, local.</span>
-<span style={{ color: '#c084fc' }}>POST</span> <span style={{ color: '#22d3ee' }}>/api/v1/send</span>
-<span style={{ color: '#fbbf24' }}>Authorization:</span> Bearer <span style={{ color: '#4ade80' }}>re_live_7x92k...</span>
-
-{
-  <span style={{ color: '#6366f1' }}>"to"</span>: <span style={{ color: '#4ade80' }}>"founder@startup.ng"</span>,
-  <span style={{ color: '#6366f1' }}>"subject"</span>: <span style={{ color: '#4ade80' }}>"Welcome to the Future"</span>,
-  <span style={{ color: '#6366f1' }}>"provider"</span>: <span style={{ color: '#4ade80' }}>"optimized-african-node"</span>
-}`}
+              <div style={{ padding: '2rem', background: 'rgba(2, 6, 23, 0.5)' }}>
+                <pre style={{ color: '#f8fafc', fontSize: '0.9rem', lineHeight: 1.6, overflowX: 'auto', border: 'none', background: 'transparent' }}>
+                  <span style={{ color: '#94a3b8' }}>{"// Fast, reliable, local."}</span>{"\n"}
+                  <span style={{ color: '#c084fc' }}>POST</span> <span style={{ color: '#22d3ee' }}>/api/v1/send</span>{"\n"}
+                  <span style={{ color: '#fbbf24' }}>Authorization:</span> Bearer <span style={{ color: '#4ade80' }}>re_live_7x92k...</span>{"\n\n"}
+                  {"{"}{"\n"}
+                  {"  "}<span style={{ color: '#6366f1' }}>"to"</span>: <span style={{ color: '#4ade80' }}>"founder@startup.ng"</span>,{"\n"}
+                  {"  "}<span style={{ color: '#6366f1' }}>"subject"</span>: <span style={{ color: '#4ade80' }}>"Welcome to the Future"</span>,{"\n"}
+                  {"  "}<span style={{ color: '#6366f1' }}>"provider"</span>: <span style={{ color: '#4ade80' }}>"optimized-african-node"</span>{"\n"}
+                  {"}"}
                 </pre>
               </div>
             </div>
           </div>
         </div>
-      </section>      {/* 2. TRUST SECTION */}
+      </section>
+
+      {/* 2. TRUST SECTION */}
       <section style={{ borderTop: '1px solid var(--border)', padding: '6rem 0', background: 'rgba(2, 6, 23, 0.3)', backdropFilter: 'blur(20px)' }}>
         <div className="max-w-7xl">
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '4rem', textAlign: 'center', fontWeight: 600 }}>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Layout, Palette, Type, MousePointer2, Check, ArrowLeft, Image as ImageIcon, Plus } from "lucide-react";
+import { Layout, Palette, Type, MousePointer2, Check, ArrowLeft, Image as ImageIcon, Plus, Smartphone, Globe } from "lucide-react";
 
 const PRESET_TEMPLATES = [
   {
@@ -94,108 +94,199 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
 
   if (view === "editor") {
     return (
-      <div className="animate-fade">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: '85vh' }}>
+        {/* Editor Toolbar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', padding: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
             <button 
               onClick={() => setView("gallery")}
-              className="btn-icon"
-              style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '0.5rem', padding: '0.5rem' }}
+              className="btn-icon glass"
             >
               <ArrowLeft size={20} />
             </button>
             <div>
-              <h1 className="page-title" style={{ margin: 0 }}>Customizing: {selectedTemplate.name}</h1>
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Visual Editor — Drag elements or click to customize</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                <h1 className="page-title" style={{ margin: 0, fontSize: '1.2rem' }}>{selectedTemplate.name}</h1>
+                {selectedTemplate.isPro && (
+                  <span style={{ background: 'linear-gradient(to right, #ec4899, #8b5cf6)', padding: '0.2rem 0.6rem', borderRadius: '0.4rem', fontSize: '0.6rem', fontWeight: 800, color: 'white' }}>PRO</span>
+                )}
+              </div>
+              <p style={{ color: '#94a3b8', fontSize: '0.75rem', marginTop: '2px' }}>Visual Builder — Everything is editable</p>
             </div>
           </div>
-          <button 
-            className="btn btn-primary"
-            onClick={() => onSelect?.(selectedTemplate)}
-          >
-            Use Template
-          </button>
+          
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <div style={{ display: 'flex', background: 'rgba(255,255,255,0.03)', borderRadius: '0.6rem', padding: '0.3rem' }}>
+               <button className="btn-icon" style={{ borderRadius: '0.4rem', background: 'rgba(255,255,255,0.05)' }}><Smartphone size={16} /></button>
+               <button className="btn-icon" style={{ borderRadius: '0.4rem' }}><Globe size={16} /></button>
+            </div>
+            <button className="btn btn-primary" onClick={() => onSelect?.(selectedTemplate)}>
+              Save & Send
+            </button>
+          </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '2rem' }}>
-          {/* Editor Sidebar */}
-          <div className="panel glass" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            <div>
-               <h4 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                 <Palette size={16} /> Brand Colors
-               </h4>
-               <div style={{ display: 'flex', gap: '0.8rem' }}>
-                  {["#6366f1", "#10b981", "#ec4899", "#f59e0b", "#1e293b"].map(c => (
+        <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr 280px', gap: '2rem', flexGrow: 1, minHeight: 0 }}>
+          
+          {/* 1. COMPONENTS PANEL */}
+          <div className="panel glass" style={{ padding: '1.5rem', overflowY: 'auto' }}>
+            <h4 style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', marginBottom: '1.5rem' }}>Components</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {[
+                { icon: Type, label: "Headline", desc: "H1, H2, H3" },
+                { icon: ImageIcon, label: "Hero Image", desc: "Full width" },
+                { icon: MousePointer2, label: "Button", desc: "Call to action" },
+                { icon: Layout, label: "Grid Block", desc: "2-3 Columns" },
+                { icon: Plus, label: "Spacer", desc: "Visual gap" }
+              ].map(comp => (
+                <div key={comp.label} className="glass" style={{ padding: '1rem', borderRadius: '1rem', cursor: 'grab', border: '1px solid rgba(255,255,255,0.03)', transition: '0.2s' }}>
+                   <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <div style={{ padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '0.6rem' }}><comp.icon size={18} /></div>
+                      <div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{comp.label}</div>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{comp.desc}</div>
+                      </div>
+                   </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '1rem', border: '1px solid rgba(99, 102, 241, 0.1)' }}>
+               <p style={{ fontSize: '0.7rem', color: '#a5b4fc', lineHeight: 1.5 }}>
+                 Drag these blocks onto the canvas to add sections.
+               </p>
+            </div>
+          </div>
+
+          {/* 2. CANVAS (CANVAS) */}
+          <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', borderRadius: '1.5rem', border: '1px solid var(--border)', padding: '2rem', position: 'relative' }}>
+             {/* Canvas Frame */}
+             <div style={{ 
+               width: '100%', maxWidth: '650px', margin: '0 auto', background: '#ffffff', 
+               boxShadow: '0 25px 70px rgba(0,0,0,0.5)', borderRadius: '4px', overflow: 'hidden' 
+             }}>
+                {/* Visual Header */}
+                <div style={{ height: '4px', background: accentColor }}></div>
+                <div style={{ padding: '3rem' }}>
+                   {/* Editable Sections with hover-frames */}
+                   <div className="edit-block" style={{ padding: '1rem', position: 'relative', border: '1px dashed transparent', transition: '0.2s', fontFamily: selectedTemplate.id === 'classy' ? 'serif' : 'inherit' }}>
+                      <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.1, margin: 0 }}>
+                        {selectedTemplate.name === 'Classic Elegance' ? 'A Timeless Message' : 'Welcome to the Future of Messaging'}
+                      </h1>
+                   </div>
+
+                   <div className="edit-block" style={{ marginTop: '2rem', position: 'relative' }}>
+                      <div style={{ width: '100%', height: '300px', background: '#f8fafc', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                         <ImageIcon size={48} color="#cbd5e1" />
+                      </div>
+                   </div>
+
+                   <div className="edit-block" style={{ marginTop: '3rem', padding: '1rem', position: 'relative' }}>
+                      <p style={{ color: '#475569', fontSize: '1.1rem', lineHeight: 1.7, margin: 0 }}>
+                        Your message starts here. This premium preset is fully responsive and tested across 50+ email clients. 
+                        Relay Africa ensures your design remains consistent, beautiful, and high-converting.
+                      </p>
+                   </div>
+
+                   <div className="edit-block" style={{ marginTop: '3.5rem', textAlign: 'center' }}>
+                      <button style={{ 
+                        background: accentColor, color: '#ffffff', border: 'none', padding: '1.2rem 3rem', 
+                        borderRadius: '8px', fontWeight: 800, fontSize: '1rem', transition: '0.3s'
+                      }}>
+                        Unlock Access Now
+                      </button>
+                   </div>
+
+                   <div style={{ marginTop: '6rem', paddingTop: '3rem', borderTop: '1px solid #f1f5f9', textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem' }}>Relay Africa</div>
+                      <p style={{ color: '#94a3b8', fontSize: '0.75rem', margin: 0 }}>
+                        © 2026 Relay Africa Ltd. All rights reserved. <br/>
+                        Sent to hello@relay.africa • Unsubscribe
+                      </p>
+                   </div>
+                </div>
+             </div>
+
+             {/* Drag Indicator Overlay (Mock) */}
+             <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.8)', padding: '0.8rem 1.5rem', borderRadius: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
+                <MousePointer2 size={16} color="var(--primary)" />
+                <span style={{ fontSize: '0.8rem', color: '#f8fafc', fontWeight: 600 }}>Hover over sections to edit or drag new blocks</span>
+             </div>
+          </div>
+
+          {/* 3. PROPERTIES PANEL */}
+          <div className="panel glass" style={{ padding: '1.5rem', overflowY: 'auto' }}>
+            <h4 style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b', marginBottom: '1.5rem' }}>Global Styles</h4>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '1rem' }}>Accent Color</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+                  {["#6366f1", "#4f46e5", "#ec4899", "#10b981", "#f59e0b", "#0f172a", "#ef4444"].map(c => (
                     <div 
                       key={c} 
                       onClick={() => setAccentColor(c)}
                       style={{ 
-                        width: '2rem', height: '2rem', borderRadius: '50%', background: c, cursor: 'pointer',
-                        border: accentColor === c ? '2px solid white' : '2px solid transparent',
-                        boxShadow: accentColor === c ? '0 0 10px rgba(255,255,255,0.3)' : 'none'
+                        width: '2.2rem', height: '2.2rem', borderRadius: '0.6rem', background: c, cursor: 'pointer',
+                        border: accentColor === c ? '2px solid white' : '1px solid rgba(255,255,255,0.1)',
+                        transform: accentColor === c ? 'scale(1.1)' : 'scale(1)',
+                        transition: '0.2s',
+                        boxShadow: accentColor === c ? `0 0 15px ${c}66` : 'none'
                       }} 
                     />
                   ))}
                </div>
-            </div>
+              </div>
 
-            <div>
-               <h4 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                 <Layout size={16} /> Elements
-               </h4>
-               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
-                  {[
-                    { icon: Type, label: "Text" },
-                    { icon: ImageIcon, label: "Image" },
-                    { icon: MousePointer2, label: "Button" },
-                    { icon: Plus, label: "Section" }
-                  ].map(e => (
-                    <div key={e.label} className="glass" style={{ padding: '1rem', textAlign: 'center', borderRadius: '0.8rem', cursor: 'pointer', transition: '0.2s' }}>
-                      <e.icon size={20} style={{ margin: '0 auto 0.5rem', opacity: 0.6 }} />
-                      <div style={{ fontSize: '0.75rem', fontWeight: 600 }}>{e.label}</div>
+              <div>
+                 <label style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '1rem' }}>Typography</label>
+                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <button className="glass" style={{ width: '100%', padding: '0.8rem', borderRadius: '0.6rem', border: '1px solid var(--primary)', textAlign: 'left', fontSize: '0.85rem' }}>Inter (Sans-serif)</button>
+                    <button className="glass" style={{ width: '100%', padding: '0.8rem', borderRadius: '0.6rem', border: '1px solid transparent', textAlign: 'left', fontSize: '0.85rem' }}>Outfit (Modern)</button>
+                    <button className="glass" style={{ width: '100%', padding: '0.8rem', borderRadius: '0.6rem', border: '1px solid transparent', textAlign: 'left', fontSize: '0.85rem', fontFamily: 'serif' }}>EB Garamond (Serif)</button>
+                 </div>
+              </div>
+
+              <div>
+                 <label style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '1rem' }}>Canvas Settings</label>
+                 <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ flex: 1 }}>
+                       <div style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: '0.5rem' }}>Width</div>
+                       <input type="text" readOnly value="650px" className="input-styled" style={{ fontSize: '0.8rem', padding: '0.5rem' }} />
                     </div>
-                  ))}
-               </div>
+                    <div style={{ flex: 1 }}>
+                       <div style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: '0.5rem' }}>Corner</div>
+                       <input type="text" readOnly value="4px" className="input-styled" style={{ fontSize: '0.8rem', padding: '0.5rem' }} />
+                    </div>
+                 </div>
+              </div>
             </div>
 
-            <div style={{ marginTop: 'auto', padding: '1rem', background: 'rgba(79, 70, 229, 0.05)', borderRadius: '1rem', border: '1px solid rgba(79, 70, 229, 0.1)' }}>
-              <p style={{ fontSize: '0.8rem', color: '#a5b4fc', lineHeight: 1.5 }}>
-                <strong>Tip:</strong> You can drag these elements directly into the preview window to add new content blocks.
-              </p>
+            <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+               <button className="btn btn-secondary" style={{ width: '100%', fontSize: '0.8rem' }}>Reset to Preset</button>
             </div>
           </div>
 
-          {/* Preview Window */}
-          <div className="panel" style={{ background: '#f8fafc', borderRadius: '1.5rem', padding: '4rem', display: 'flex', justifyContent: 'center', overflowY: 'auto', maxHeight: '70vh' }}>
-             <div style={{ 
-               width: '100%', maxWidth: '600px', background: '#ffffff', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', 
-               borderRadius: '0.5rem', overflow: 'hidden', border: '1px solid #e2e8f0' 
-             }}>
-                {/* Mock Template Content */}
-                <div style={{ height: '5px', background: accentColor }}></div>
-                <div style={{ padding: '3rem' }}>
-                   <div style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '2rem', color: '#1e293b', fontFamily: selectedTemplate.id === 'classy' ? 'serif' : 'inherit' }}>
-                      {selectedTemplate.name === 'Classic Elegance' ? 'A Timeless Message' : 'Welcome to the Future'}
-                   </div>
-                   <div style={{ width: '100%', height: '200px', background: '#f1f5f9', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem' }}>
-                      <ImageIcon size={40} color="#cbd5e1" />
-                   </div>
-                   <p style={{ color: '#64748b', lineHeight: 1.8, marginBottom: '3rem' }}>
-                      This is a preview of your {selectedTemplate.tag.toLowerCase()}. You can customize the text, images, and colors to match your brand perfectly. Relay Africa ensures this looks stunning in every inbox.
-                   </p>
-                   <button style={{ 
-                     background: accentColor, color: '#ffffff', border: 'none', padding: '1rem 2.5rem', 
-                     borderRadius: '0.4rem', fontWeight: 700, cursor: 'default' 
-                   }}>
-                      Get Started Now
-                   </button>
-                   <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid #f1f5f9', textAlign: 'center', color: '#94a3b8', fontSize: '0.8rem' }}>
-                      © 2026 Relay Africa • Sent via Premium Infrastructure
-                   </div>
-                </div>
-             </div>
-          </div>
         </div>
+
+        <style jsx>{`
+          .edit-block:hover {
+            border: 1px dashed var(--primary) !important;
+            cursor: pointer;
+          }
+          .edit-block:hover::after {
+            content: 'Edit Section';
+            position: absolute;
+            top: -10px;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 4px;
+          }
+        `}</style>
       </div>
     );
   }

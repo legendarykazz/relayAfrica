@@ -73,6 +73,8 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
   const [accentColor, setAccentColor] = useState("#6366f1");
   const [showSidebars, setShowSidebars] = useState(true);
   const [buttonLink, setButtonLink] = useState("https://relay.africa");
+  const [isSaving, setIsSaving] = useState(false);
+  const [blocks, setBlocks] = useState<any[]>([]);
 
   const filteredTemplates = activeCategory === "All" 
     ? PRESET_TEMPLATES 
@@ -81,7 +83,30 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
   const handleSelect = (template: any) => {
     setSelectedTemplate(template);
     setAccentColor(template.colors[0]);
+    // Initialize with a default hero block matching the template style
+    setBlocks([
+      { id: 'h1', type: 'headline', content: template.name + " — Premium Update" },
+      { id: 'p1', type: 'text', content: template.description }
+    ]);
     setView("editor");
+  };
+
+  const addBlock = (type: string) => {
+    const newBlock = {
+       id: Math.random().toString(36).substr(2, 9),
+       type,
+       content: type === 'headline' ? 'New Headline' : 'Your new content goes here...'
+    };
+    setBlocks([...blocks, newBlock]);
+  };
+
+  const handleSave = () => {
+     setIsSaving(true);
+     setTimeout(() => {
+        setIsSaving(false);
+        // In a real app, this would call onSelect with the full state
+        onSelect?.({ ...selectedTemplate, blocks, accentColor, buttonLink });
+     }, 800);
   };
 
   if (view === "editor") {
@@ -91,35 +116,36 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
         background: '#020617', display: 'flex', flexDirection: 'column',
         padding: '1.5rem'
       }}>
-        {/* Full-Screen Editor Toolbar - High Fidelity */}
+        {/* Full-Screen Editor Toolbar - Functionalized */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', padding: '1rem 2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1.2rem', border: '1px solid var(--border)', backdropFilter: 'blur(20px)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
             <div style={{ display: 'flex', gap: '0.8rem' }}>
               <button 
                 onClick={() => setView("gallery")}
-                className="btn btn-secondary"
+                className="btn glass"
                 style={{ padding: '0.6rem 1.2rem', borderRadius: '0.8rem', fontSize: '0.85rem' }}
               >
                 <ArrowLeft size={18} style={{ marginRight: '0.5rem' }} /> Exit Studio
               </button>
               <button 
                 className="btn glass"
-                style={{ padding: '0.6rem 1.2rem', borderRadius: '0.8rem', fontSize: '0.85rem' }}
-                onClick={() => onSelect?.(selectedTemplate)}
+                style={{ padding: '0.6rem 1.2rem', borderRadius: '0.8rem', fontSize: '0.85rem', color: isSaving ? '#10b981' : 'white' }}
+                onClick={handleSave}
+                disabled={isSaving}
               >
-                Save Draft
+                {isSaving ? "Saving..." : "Save Draft"}
               </button>
             </div>
             <div style={{ height: '30px', width: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <h1 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800 }}>{selectedTemplate.name}</h1>
-                <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>• Dynamic Design Studio</span>
+                <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>• Live Editor</span>
               </div>
             </div>
           </div>
           
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
             <div style={{ position: 'relative' }}>
               <button 
                 className={`btn-icon ${!showSidebars ? 'btn-primary' : 'glass'}`} 
@@ -130,22 +156,17 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
                   boxShadow: !showSidebars ? 'none' : '0 0 15px rgba(99, 102, 241, 0.4)',
                   animation: showSidebars ? 'pulse 2s infinite' : 'none'
                 }}
-                title="Focus Mode (Hide Panels)"
               >
                  <Layout size={24} />
               </button>
               {showSidebars && (
                 <div style={{ position: 'absolute', top: '-110%', left: '50%', transform: 'translateX(-50%)', background: 'var(--primary)', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.6rem', fontSize: '0.75rem', fontWeight: 900, whiteSpace: 'nowrap', pointerEvents: 'none' }}>
-                   CLICK FOR FULL SCREEN
+                   FULL SCREEN
                 </div>
               )}
             </div>
 
-            <div style={{ display: 'flex', background: 'rgba(255,255,255,0.03)', borderRadius: '0.8rem', padding: '0.4rem', border: '1px solid rgba(255,255,255,0.05)' }}>
-               <button className="btn-icon" style={{ borderRadius: '0.6rem', background: 'rgba(255,255,255,0.1)', height: '2.5rem', width: '2.5rem' }}><Smartphone size={20} /></button>
-               <button className="btn-icon" style={{ borderRadius: '0.6rem', marginLeft: '0.4rem', height: '2.5rem', width: '2.5rem' }}><Globe size={20} /></button>
-            </div>
-            <button className="btn btn-primary" style={{ padding: '0.8rem 2.5rem', borderRadius: '1rem', fontWeight: 900, fontSize: '1rem', boxShadow: '0 8px 30px rgba(99, 102, 241, 0.4)' }} onClick={() => onSelect?.(selectedTemplate)}>
+            <button className="btn btn-primary" style={{ padding: '0.8rem 2.5rem', borderRadius: '1rem', fontWeight: 900, fontSize: '1rem' }} onClick={handleSave}>
               Publish Now
             </button>
           </div>
@@ -167,7 +188,7 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
                position: 'fixed', top: '15rem', right: '4rem', zIndex: 100,
                display: 'flex', flexDirection: 'column', gap: '1rem'
             }}>
-               <div className="glass" style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid var(--primary)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
+               <div className="glass" style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid var(--primary)' }}>
                   <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 900, color: '#94a3b8', marginBottom: '0.5rem' }}>QUICK URL</label>
                   <input 
                     type="text" 
@@ -176,37 +197,30 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
                     style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '0.4rem 0', outline: 'none', width: '150px' }}
                   />
                </div>
-               <div className="glass" style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid var(--primary)', textAlign: 'center' }}>
-                  <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 900, color: '#94a3b8', marginBottom: '0.8rem' }}>THEME</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
-                    {["#6366f1", "#4f46e5", "#ec4899", "#10b981"].map(c => (
-                      <div 
-                        key={c} 
-                        onClick={() => setAccentColor(c)}
-                        style={{ width: '24px', height: '24px', borderRadius: '4px', background: c, cursor: 'pointer', border: accentColor === c ? '2px solid white' : 'none' }} 
-                      />
-                    ))}
-                  </div>
-               </div>
                <button onClick={() => setShowSidebars(true)} className="btn btn-primary" style={{ padding: '0.8rem', borderRadius: '1rem' }}>
                  <ArrowLeft size={20} />
                </button>
             </div>
           )}
 
-          {/* 1. COMPONENTS PANEL */}
+          {/* 1. COMPONENTS PANEL - NOW WORKING */}
           <div className="panel glass" style={{ padding: '2rem', overflowY: 'auto', borderRadius: '1.8rem', opacity: showSidebars ? 1 : 0, pointerEvents: showSidebars ? 'all' : 'none', transition: '0.3s' }}>
             <h4 style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748b', marginBottom: '1.8rem' }}>Add Blocks</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
               {[
-                { icon: Type, label: "Headline", desc: "H1, H2, H3" },
-                { icon: ImageIcon, label: "Hero Media", desc: "Focus image" },
-                { icon: MousePointer2, label: "Custom Link", desc: "CTA Button" },
-                { icon: Layout, label: "Pricing Table", desc: "Grids" }
+                { type: 'headline', icon: Type, label: "Headline", desc: "Interactive Title" },
+                { type: 'media', icon: ImageIcon, label: "Hero Media", desc: "Focus Image" },
+                { type: 'link', icon: MousePointer2, label: "Action Link", desc: "CTA Button" },
+                { type: 'grid', icon: Layout, label: "Pricing Table", desc: "Complex Grid" }
               ].map(comp => (
-                <div key={comp.label} className="glass" style={{ padding: '1.2rem', borderRadius: '1.2rem', cursor: 'grab', border: '1px solid rgba(255,255,255,0.05)', transition: '0.2s' }}>
+                <div 
+                  key={comp.label} 
+                  className="glass-hover" 
+                  onClick={() => addBlock(comp.type)}
+                  style={{ padding: '1.2rem', borderRadius: '1.2rem', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.05)', transition: '0.2s' }}
+                >
                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                      <div style={{ padding: '0.6rem', background: 'rgba(255,255,255,0.03)', borderRadius: '0.8rem' }}><comp.icon size={20} /></div>
+                      <div style={{ padding: '0.6rem', background: accentColor, borderRadius: '0.8rem', color: 'white' }}><comp.icon size={20} /></div>
                       <div>
                         <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>{comp.label}</div>
                         <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{comp.desc}</div>
@@ -224,7 +238,6 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
             position: 'relative', boxShadow: 'inset 0 0 100px rgba(0,0,0,0.5)', 
             transition: '0.5s cubic-bezier(0.4, 0, 0.2, 1)'
           }}>
-             {/* Dynamic Canvas width for Focus Mode */}
              <div style={{ 
                width: '100%', maxWidth: showSidebars ? '850px' : '950px', margin: '0 auto', background: '#ffffff', 
                boxShadow: '0 50px 120px rgba(0,0,0,0.8)', borderRadius: '4px', 
@@ -233,103 +246,65 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
              }}>
                 <div style={{ height: '8px', background: accentColor }}></div>
                 
-                <div style={{ padding: showSidebars ? '5rem 6rem' : '6rem 8rem' }}>
-                   {/* 1. DYNAMIC HERO SECTION - HIGH FIDELITY */}
-                   {selectedTemplate.id === 'corporate-bold' && (
-                     <div style={{ background: accentColor, padding: '7rem 5rem', color: 'white', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 0, right: 0, width: '40%', height: '100%', background: 'linear-gradient(135deg, transparent, rgba(255,255,255,0.1))' }}></div>
-                        <div style={{ position: 'relative', zIndex: 1 }}>
-                           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '2rem', opacity: 0.9 }}>
-                              <Globe size={28} /> <span style={{ fontWeight: 900, fontSize: '1.2rem', letterSpacing: '0.1em' }}>NEXUS STRATEGY</span>
+                <div style={{ padding: showSidebars ? '4rem 5rem' : '6rem 7rem' }}>
+                   {/* DYNAMIC BLOCKS RENDERING */}
+                   {blocks.map((block, index) => (
+                     <div key={block.id} className="edit-block" style={{ position: 'relative', marginBottom: '2.5rem' }}>
+                        {block.type === 'headline' && (
+                          <h1 
+                            contentEditable 
+                            suppressContentEditableWarning
+                            onBlur={(e) => {
+                               const newBlocks = [...blocks];
+                               newBlocks[index].content = e.currentTarget.innerText;
+                               setBlocks(newBlocks);
+                            }}
+                            style={{ fontSize: '4rem', fontWeight: 900, lineHeight: 1, color: '#0f172a', border: 'none', outline: 'none' }}
+                          >
+                             {block.content}
+                          </h1>
+                        )}
+                        {block.type === 'text' && (
+                          <p 
+                            contentEditable 
+                            style={{ fontSize: '1.2rem', lineHeight: 1.6, color: '#475569', outline: 'none' }}
+                          >
+                             {block.content}
+                          </p>
+                        )}
+                        {block.type === 'media' && (
+                          <div style={{ width: '100%', height: '400px', background: '#f8fafc', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #cbd5e1' }}>
+                             <ImageIcon size={48} color="#cbd5e1" />
+                          </div>
+                        )}
+                        {block.type === 'link' && (
+                           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                              <a href={buttonLink} target="_blank" rel="noopener noreferrer" style={{ 
+                                background: accentColor, color: 'white', padding: '1.5rem 4rem', borderRadius: '4px', fontWeight: 900, textDecoration: 'none', display: 'inline-block' 
+                              }}>
+                                ACTION BUTTON
+                              </a>
                            </div>
-                           <h1 style={{ fontSize: '4.8rem', fontWeight: 900, lineHeight: 1, marginBottom: '2rem', letterSpacing: '-0.04em' }}>We keep our promises to you.</h1>
-                           <p style={{ fontSize: '1.4rem', opacity: 0.9, marginBottom: '3.5rem', maxWidth: '550px', lineHeight: 1.5 }}>
-                             Scaling financial infrastructure with high-fidelity, industrial-grade messaging across Africa.
-                           </p>
-                           <button style={{ background: 'white', color: accentColor, border: 'none', padding: '1.8rem 4.5rem', fontWeight: 900, borderRadius: '4px', fontSize: '1.1rem', cursor: 'pointer' }}>GET STARTED NOW</button>
-                        </div>
+                        )}
+                        {block.type === 'grid' && (
+                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '2rem' }}>
+                              <div style={{ padding: '2rem', border: '1px solid #f1f5f9', borderRadius: '4px' }}>
+                                 <h3 style={{ fontWeight: 800 }}>Feature One</h3>
+                                 <p style={{ color: '#64748b' }}>Details about this premium feature.</p>
+                              </div>
+                              <div style={{ padding: '2rem', border: '1px solid #f1f5f9', borderRadius: '4px' }}>
+                                 <h3 style={{ fontWeight: 800 }}>Feature Two</h3>
+                                 <p style={{ color: '#64748b' }}>Details about another premium feature.</p>
+                              </div>
+                           </div>
+                        )}
                      </div>
-                   )}
+                   ))}
 
-                   {selectedTemplate.id === 'resort-immersive' && (
-                     <div style={{ background: '#2d1b4e', padding: '0', borderRadius: '4px', overflow: 'hidden' }}>
-                        <div style={{ position: 'relative', height: '600px', background: 'url(https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80)', backgroundSize: 'cover', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(45,27,78,0.1), rgba(45,27,78,0.9))' }}></div>
-                           <div style={{ position: 'relative', textAlign: 'center', color: 'white', padding: '0 3rem' }}>
-                              <h1 style={{ fontSize: '5.2rem', fontWeight: 900, lineHeight: 0.9, marginBottom: '2.5rem', letterSpacing: '-0.05em' }}>Capture Your <br/>Memories Here.</h1>
-                              <button style={{ background: accentColor, color: 'white', border: 'none', padding: '1.5rem 4rem', fontWeight: 900, borderRadius: '4px', fontSize: '1.1rem' }}>BOOK NOW</button>
-                           </div>
-                        </div>
-                        <div style={{ padding: '5rem', display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '3rem' }}>
-                           <div className="edit-block" style={{ padding: '3rem', background: 'white', color: '#0f172a', borderRadius: '8px', boxShadow: '0 30px 60px rgba(0,0,0,0.1)', border: '1px solid #f1f5f9', transform: 'translateY(-6rem)' }}>
-                              <h3 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '1rem' }}>$350 / NIGHT</h3>
-                              <p style={{ color: '#475569', fontSize: '1.1rem', lineHeight: 1.7 }}>Luxury Mediterranean View with Infinity Pool Access and Private Dining Experiences.</p>
-                           </div>
-                           <div style={{ background: 'url(https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80)', backgroundSize: 'cover', borderRadius: '8px', height: '300px' }}></div>
-                        </div>
-                     </div>
-                   )}
-
-                   {selectedTemplate.id === 'ecom-pro' && (
-                     <div style={{ padding: '2rem 1rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '5rem' }}>
-                           <div style={{ background: '#f8fafc', padding: '1.2rem 2.5rem', borderRadius: '3rem', display: 'flex', alignItems: 'center', gap: '1.2rem', border: '1px solid #e2e8f0' }}>
-                              <Smartphone size={24} color={accentColor} /> <span style={{ fontWeight: 900, fontSize: '1rem', letterSpacing: '0.05em' }}>MAILTO PRIME</span>
-                           </div>
-                        </div>
-                        <h1 style={{ fontSize: '3.5rem', fontWeight: 900, color: '#0f172a', textAlign: 'center', marginBottom: '2rem', letterSpacing: '-0.03em' }}>Order Confirmed.</h1>
-                        <p style={{ textAlign: 'center', color: '#64748b', fontSize: '1.3rem', marginBottom: '5rem', maxWidth: '600px', margin: '0 auto 5rem' }}>
-                          We've received your payment and our logistics team in Lagos is now preparing your high-fidelity package.
-                        </p>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', borderTop: '2px dashed #e2e8f0', paddingTop: '45rem', position: 'relative' }}>
-                           <div style={{ position: 'absolute', top: '10rem', width: '100%', height: '300px', background: '#f8fafc', borderRadius: '8px', border: '1px dashed #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <h3 style={{ color: '#94a3b8', fontWeight: 800 }}>Order Items Preview</h3>
-                           </div>
-                           <div>
-                              <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: '#94a3b8', letterSpacing: '0.1em', marginBottom: '1rem' }}>Order Info</h4>
-                              <p style={{ color: accentColor, fontWeight: 900, fontSize: '1.2rem' }}>#REL-AFR-0092</p>
-                           </div>
-                           <div>
-                              <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: '#94a3b8', letterSpacing: '0.1em', marginBottom: '1rem' }}>Dispatch Address</h4>
-                              <p style={{ color: '#0f172a', fontWeight: 700, fontSize: '1.1rem' }}>123 Tech Avenue, Victoria Island, Lagos</p>
-                           </div>
-                        </div>
-                     </div>
-                   )}
-
-                   {!['corporate-bold', 'resort-immersive', 'ecom-pro'].includes(selectedTemplate.id) && (
-                     <div style={{ padding: '0' }}>
-                        <div className="edit-block" style={{ marginBottom: '4rem', fontFamily: selectedTemplate.id === 'classy' ? 'serif' : 'inherit' }}>
-                           <h1 style={{ fontSize: '5rem', fontWeight: 900, color: '#0f172a', lineHeight: 1, letterSpacing: '-0.05em', margin: 0 }}>
-                             {selectedTemplate.name} — Premium Builder.
-                           </h1>
-                        </div>
-                        <div className="edit-block" style={{ marginBottom: '5rem' }}>
-                           <div style={{ width: '100%', height: '500px', background: '#f8fafc', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #f1f5f9' }}>
-                              <ImageIcon size={72} color="#cbd5e1" />
-                           </div>
-                        </div>
-                        <p style={{ color: '#475569', fontSize: '1.5rem', lineHeight: 1.7, maxWidth: '700px' }}>{selectedTemplate.description}</p>
-                     </div>
-                   )}
-
-                   <div className="edit-block" style={{ marginTop: '6rem', textAlign: 'center' }}>
-                      <a href={buttonLink} target="_blank" rel="noopener noreferrer" style={{ 
-                        background: accentColor, color: '#ffffff', border: 'none', padding: '2rem 6rem', 
-                        borderRadius: '0', fontWeight: 900, fontSize: '1.3rem', textTransform: 'uppercase', letterSpacing: '0.15em', 
-                        textDecoration: 'none', display: 'inline-block'
-                      }}>
-                        Unlock Exclusive Access
-                      </a>
-                   </div>
-
-                   <div style={{ marginTop: '12rem', paddingTop: '6rem', borderTop: '3px solid #0f172a', textAlign: 'center' }}>
-                      <div style={{ fontSize: '2rem', fontWeight: 900, color: '#0f172a', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>RELAY AFRICA</div>
-                      <p style={{ color: '#94a3b8', fontSize: '1.1rem', margin: 0, lineHeight: 1.8 }}>
-                        Building the modern messaging internet for Africa. <br/>
-                        HQ: 123 Tech Hub, Victoria Island, Lagos • hello@relay.africa <br/>
-                        <span style={{ fontSize: '0.9rem', opacity: 0.6 }}>Sent with high-fidelity infrastructure</span>
-                      </p>
+                   {/* Template specific footer */}
+                   <div style={{ marginTop: '10rem', paddingTop: '5rem', borderTop: '2px solid #0f172a', textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0f172a', marginBottom: '1rem' }}>RELAY AFRICA</div>
+                      <p style={{ color: '#94a3b8', fontSize: '1rem', margin: 0 }}>Building infrastructure for Africa. <br/> Lagos • Victoria Island</p>
                    </div>
                 </div>
              </div>
@@ -338,38 +313,29 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
           {/* 3. SETTINGS & STYLES */}
           <div className="panel glass" style={{ padding: '2rem', overflowY: 'auto', borderRadius: '1.8rem', opacity: showSidebars ? 1 : 0, pointerEvents: showSidebars ? 'all' : 'none', transition: '0.3s' }}>
             <h4 style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748b', marginBottom: '2rem' }}>Block Controls</h4>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <div>
-                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8', marginBottom: '1.2rem' }}>CTA Link (URL)</label>
+                 <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', marginBottom: '1rem' }}>CTA LINK</label>
                  <input 
                    type="text" 
                    value={buttonLink} 
                    onChange={(e) => setButtonLink(e.target.value)}
-                   className="input-styled glass" 
-                   style={{ width: '100%', fontSize: '0.9rem', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }} 
-                   placeholder="https://example.com"
+                   className="glass" 
+                   style={{ width: '100%', padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.1)', color: 'white', outline: 'none' }} 
                  />
               </div>
-
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8', marginBottom: '1.2rem' }}>Brand Theme</label>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', marginBottom: '1rem' }}>THEME COLOR</label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.8rem' }}>
                   {["#6366f1", "#4f46e5", "#ec4899", "#10b981", "#f59e0b", "#0f172a", "#ef4444", "#8b5cf6"].map(c => (
                     <div 
                       key={c} 
                       onClick={() => setAccentColor(c)}
-                      style={{ 
-                        width: 'auto', aspectRatio: '1/1', borderRadius: '0.8rem', background: c, cursor: 'pointer',
-                        border: accentColor === c ? '3px solid white' : '1px solid rgba(255,255,255,0.1)',
-                        transform: accentColor === c ? 'scale(1.15)' : 'scale(1)',
-                        transition: '0.s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-                      }} 
+                      style={{ width: '100%', aspectRatio: '1/1', borderRadius: '4px', background: c, cursor: 'pointer', border: accentColor === c ? '2px solid white' : 'none' }} 
                     />
                   ))}
-               </div>
+                </div>
               </div>
-
               <div>
                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8', marginBottom: '1.2rem' }}>Master Typos</label>
                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.8rem' }}>
@@ -383,7 +349,6 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
                <button className="btn btn-secondary" style={{ width: '100%', padding: '1.2rem', borderRadius: '1.2rem', fontWeight: 800 }}>Reset Options</button>
             </div>
           </div>
-
         </div>
 
         <style jsx>{`
@@ -393,10 +358,11 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
             position: relative;
             border-radius: 8px;
             cursor: pointer;
+            padding: 1rem;
           }
           .edit-block:hover {
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.05) !important;
+            background: rgba(0, 0, 0, 0.02) !important;
           }
            ${selectedTemplate.id === 'corporate-bold' && `.edit-block:hover { border-color: white !important; }`}
           .edit-block:hover::after {

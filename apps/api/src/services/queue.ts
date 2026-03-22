@@ -23,8 +23,8 @@ export const emailQueue = new Queue('email-queue', { connection });
 export const emailWorker = new Worker(
   'email-queue',
   async (job: Job) => {
-    const { logId, to, subject, html } = job.data;
-    console.log(`Processing email to ${to} with subject: ${subject}`);
+    const { logId, to, subject, html, from } = job.data;
+    console.log(`Processing email to ${to} with subject: ${subject} (From: ${from || 'default'})`);
     
     try {
       if (!process.env.AWS_ACCESS_KEY_ID) {
@@ -40,7 +40,7 @@ export const emailWorker = new Worker(
           },
           Subject: { Charset: "UTF-8", Data: subject },
         },
-        Source: process.env.AWS_SES_FROM_ADDRESS || 'Relay Africa <hello@relayafrica.com>',
+        Source: from || process.env.AWS_SES_FROM_ADDRESS || 'Relay Africa <hello@relayafrica.com>',
       });
 
       const data = await sesClient.send(command);

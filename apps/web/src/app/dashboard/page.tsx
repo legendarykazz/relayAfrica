@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { Mail, Key, History, LayoutDashboard, Settings, ChevronRight, Activity, Globe, ShieldCheck, Copy, Check, Send, AlertCircle, Loader2, Users, Megaphone, Layout } from "lucide-react";
-import DomainChecker from "@/components/domain-checker";
 import MessagingSandbox from "@/components/messaging-sandbox";
 import ContactsManager from "@/components/contacts-manager";
 import CampaignsManager from "@/components/campaigns-manager";
 import TemplateGallery from "@/components/template-gallery";
+import DomainManager from "@/components/domain-manager";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -167,9 +167,9 @@ export default function Dashboard() {
             </div>
 
             <div className="dashboard-grid">
-              {/* Domain Checker Panel */}
+              {/* Domain Manager Panel (Quick View) */}
               <div className="animate-fade delay-3">
-                 <DomainChecker />
+                 <DomainManager apiKey={TEST_API_KEY} />
               </div>
 
               {/* Email Logs Panel */}
@@ -361,9 +361,9 @@ export default function Dashboard() {
         {activeTab === "contacts" && <ContactsManager apiKey={TEST_API_KEY} />}
         {activeTab === "verification" && (
           <div className="animate-fade">
-            <h1 className="page-title">Domain Verification</h1>
-            <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>Secure your sending reputation by verifying your domains.</p>
-            <DomainChecker />
+            <h1 className="page-title">Infrastructure Center</h1>
+            <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>Secure your sending reputation by verifying your domains and managing DNS records.</p>
+            <DomainManager apiKey={TEST_API_KEY} />
           </div>
         )}
         {activeTab === "api" && (

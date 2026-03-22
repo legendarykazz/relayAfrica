@@ -6,7 +6,6 @@
   ],
   "scripts": {
     "build": "npm run build -w relayafrica-web",
-    "install": "npm install -w relayafrica-web",
     "dev:web": "npm run dev -w relayafrica-web",
     "dev:api": "npm run dev -w relayafrica-api",
     "build:web": "npm run build -w relayafrica-web",

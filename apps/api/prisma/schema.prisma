@@ -1,0 +1,135 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  apiKey    String     @unique @default(uuid())
+  logs      EmailLog[]
+  smsLogs   SmsLog[]
+  waLogs    WhatsAppLog[]
+  domains       Domain[]
+  audienceLists AudienceList[]
+  templates     Template[]
+  campaigns     Campaign[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  to        String
+  subject   String
+  html      String
+  status    String   @default("PENDING") // SENT, FAILED, PENDING
+  error     String?
+  createdAt DateTime @default(now())
+}
+
+model Domain {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  name        String   @unique
+  spfStatus   String   @default("MISSING") // VERIFIED, MISSING, FAILED
+  dkimStatus  String   @default("MISSING")
+  dmarcStatus String   @default("MISSING")
+  verifiedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SmsLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  to        String
+  message   String
+  status    String   @default("PENDING") // SENT, FAILED, PENDING
+  error     String?
+  createdAt DateTime @default(now())
+}
+
+model WhatsAppLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  to        String
+  message   String
+  status    String   @default("PENDING")
+  error     String?
+  createdAt DateTime @default(now())
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  to        String
+  code      String
+  verified  Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model AudienceList {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  name      String
+  contacts  Contact[]
+  campaigns Campaign[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Contact {
+  id             String       @id @default(cuid())
+  audienceListId String
+  audienceList   AudienceList @relation(fields: [audienceListId], references: [id])
+  email          String
+  firstName      String?
+  lastName       String?
+  phone          String?
+  createdAt      DateTime     @default(now())
+  
+  @@unique([audienceListId, email])
+}
+
+model Template {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  name      String
+  subject   String
+  html      String
+  campaigns Campaign[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Campaign {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  audienceListId String
+  audienceList   AudienceList @relation(fields: [audienceListId], references: [id])
+  templateId     String
+  template       Template     @relation(fields: [templateId], references: [id])
+  name           String
+  status         String       @default("DRAFT") // DRAFT, QUEUED, SENDING, COMPLETED
+  sentCount      Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}

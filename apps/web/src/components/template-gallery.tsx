@@ -5,41 +5,86 @@ const PRESET_TEMPLATES = [
   {
     id: "classy",
     name: "Classic Elegance",
-    tag: "Business",
+    tag: "Transactional",
+    category: "Business",
+    isPro: false,
     preview: "/templates/classy.png",
     colors: ["#1e293b", "#ffffff", "#f8fafc"],
     description: "Serif typography and refined spacing for high-end corporate communication."
   },
   {
+    id: "founders-update",
+    name: "Founder's Memo",
+    tag: "Newsletter",
+    category: "Personal",
+    isPro: true,
+    preview: "/templates/founder.png",
+    colors: ["#0f172a", "#f8fafc", "#ffffff"],
+    description: "A sophisticated, personal-touch template for important leadership updates."
+  },
+  {
     id: "newsletter",
     name: "Modern Pulse",
     tag: "Newsletter",
+    category: "Marketing",
+    isPro: false,
     preview: "/templates/newsletter.png",
     colors: ["#6366f1", "#ffffff", "#f1f5f9"],
     description: "Balanced multi-column layout optimized for readability and engagement."
   },
   {
-    id: "landing",
-    name: "Impact Hub",
-    tag: "Promotion",
-    preview: "/templates/landing.png",
+    id: "launch",
+    name: "Visionary Launch",
+    tag: "Landing Page",
+    category: "Marketing",
+    isPro: true,
+    preview: "/templates/launch.png",
     colors: ["#4f46e5", "#ec4899", "#0f172a"],
     description: "High-impact gradients and bold call-to-actions inspired by modern landing pages."
   },
   {
+    id: "ecom-sale",
+    name: "Flash Wave",
+    tag: "Ecommerce",
+    category: "Marketing",
+    isPro: false,
+    preview: "/templates/sale.png",
+    colors: ["#ef4444", "#fef2f2", "#ffffff"],
+    description: "Urgent, conversion-focused design for sales and limited-time offers."
+  },
+  {
+    id: "abandoned-cart",
+    name: "Retrieve Pro",
+    tag: "Ecommerce",
+    category: "System",
+    isPro: true,
+    preview: "/templates/abandoned.png",
+    colors: ["#10b981", "#ecfdf5", "#ffffff"],
+    description: "Proven layout to recover lost revenue from abandoned shopping carts."
+  },
+  {
     id: "transactional",
     name: "Clean Flow",
-    tag: "System",
+    tag: "Transactional",
+    category: "System",
+    isPro: false,
     preview: "/templates/transactional.png",
     colors: ["#ffffff", "#f8fafc", "#64748b"],
     description: "Ultra-clean design focused on information hierarchy for receipts and OTPs."
   }
 ];
 
+const CATEGORIES = ["All", "Marketing", "Transactional", "Newsletter", "System"];
+
 export default function TemplateGallery({ onSelect }: { onSelect?: (template: any) => void }) {
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [view, setView] = useState<"gallery" | "editor">("gallery");
+  const [activeCategory, setActiveCategory] = useState("All");
   const [accentColor, setAccentColor] = useState("#6366f1");
+
+  const filteredTemplates = activeCategory === "All" 
+    ? PRESET_TEMPLATES 
+    : PRESET_TEMPLATES.filter(t => t.category === activeCategory || t.tag === activeCategory);
 
   const handleSelect = (template: any) => {
     setSelectedTemplate(template);
@@ -157,29 +202,57 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
 
   return (
     <div className="animate-fade">
-      <div style={{ marginBottom: '3rem' }}>
-        <h1 className="page-title">Design Gallery</h1>
-        <p style={{ color: '#94a3b8' }}>Select a starting point for your next message. Optimized for all devices.</p>
+      <div style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <h1 className="page-title">Design Gallery</h1>
+          <p style={{ color: '#94a3b8' }}>Select a starting point for your next message. Optimized for all devices.</p>
+        </div>
+        
+        <div className="glass" style={{ display: 'flex', padding: '0.4rem', borderRadius: '0.8rem', border: '1px solid var(--glass-border)' }}>
+          {CATEGORIES.map(cat => (
+            <button 
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              style={{ 
+                padding: '0.6rem 1.2rem', borderRadius: '0.5rem', border: 'none', 
+                background: activeCategory === cat ? 'var(--primary)' : 'transparent', 
+                color: activeCategory === cat ? 'white' : 'var(--text-muted)',
+                fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', transition: '0.3s'
+              }}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2.5rem' }}>
-        {PRESET_TEMPLATES.map((t, i) => (
-          <div key={t.id} className="panel glass animate-fade" style={{ padding: 0, overflow: 'hidden', transition: '0.3s', borderRadius: '1.5rem', animationDelay: `${i * 0.1}s` }}>
+        {filteredTemplates.map((t, i) => (
+          <div key={t.id} className="panel glass animate-fade" style={{ padding: 0, overflow: 'hidden', transition: '0.3s', borderRadius: '1.5rem', animationDelay: `${i * 0.1}s`, border: t.isPro ? '1px solid rgba(236, 72, 153, 0.3)' : '1px solid var(--glass-border)' }}>
             <div style={{ height: '200px', background: `linear-gradient(135deg, ${t.colors[0]}22, ${t.colors[1]}22)`, display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)', position: 'relative' }}>
-               <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(255,255,255,0.05)', padding: '0.3rem 0.8rem', borderRadius: '1rem', fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-                 {t.tag}
+               <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '0.5rem' }}>
+                  {t.isPro && (
+                    <div style={{ background: 'linear-gradient(to right, #ec4899, #8b5cf6)', padding: '0.3rem 0.8rem', borderRadius: '1rem', fontSize: '0.65rem', fontWeight: 800, color: 'white', letterSpacing: '0.05em', boxShadow: '0 4px 12px rgba(236, 72, 153, 0.3)' }}>
+                      PRO
+                    </div>
+                  )}
+                  <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.3rem 0.8rem', borderRadius: '1rem', fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', backdropFilter: 'blur(4px)' }}>
+                    {t.tag}
+                  </div>
                </div>
                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: t.colors[0], opacity: 0.6 }}>PREVIEW</div>
             </div>
             <div style={{ padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>{t.name}</h3>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {t.name}
+              </h3>
               <p style={{ color: '#94a3b8', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '2rem' }}>{t.description}</p>
               <button 
-                className="btn btn-secondary" 
+                className={`btn ${t.isPro ? 'btn-primary' : 'btn-secondary'}`} 
                 style={{ width: '100%', padding: '0.8rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
                 onClick={() => handleSelect(t)}
               >
-                Customize <Plus size={16} />
+                {t.isPro ? 'Customize with Pro' : 'Customize Template'} <Plus size={16} />
               </button>
             </div>
           </div>

@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, Key, History, LayoutDashboard, Settings, ChevronRight, Activity, Globe, ShieldCheck, Copy, Check, Send, AlertCircle, Loader2, Users, Megaphone } from "lucide-react";
+import { Mail, Key, History, LayoutDashboard, Settings, ChevronRight, Activity, Globe, ShieldCheck, Copy, Check, Send, AlertCircle, Loader2, Users, Megaphone, Layout } from "lucide-react";
 import DomainChecker from "@/components/domain-checker";
 import MessagingSandbox from "@/components/messaging-sandbox";
 import ContactsManager from "@/components/contacts-manager";
 import CampaignsManager from "@/components/campaigns-manager";
+import TemplateGallery from "@/components/template-gallery";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [pendingTemplate, setPendingTemplate] = useState<any>(null);
   const [statsData, setStatsData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -90,6 +92,7 @@ export default function Dashboard() {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "campaigns", label: "Campaigns", icon: Megaphone },
+    { id: "templates", label: "Templates", icon: Layout },
     { id: "contacts", label: "Contacts", icon: Users },
     { id: "logs", label: "Delivery Logs", icon: History },
     { id: "sandbox", label: "Messaging Sandbox", icon: Send },
@@ -337,7 +340,24 @@ export default function Dashboard() {
           <MessagingSandbox apiKey={TEST_API_KEY} />
         )}
 
-        {activeTab === "campaigns" && <CampaignsManager apiKey={TEST_API_KEY} />}
+        {activeTab === "templates" && (
+          <TemplateGallery 
+            onSelect={(tpl) => {
+              setPendingTemplate({
+                name: `New ${tpl.name} Campaign`,
+                subject: tpl.name === 'Classic Elegance' ? 'A Timeless Message' : 'Welcome to the Future',
+                html: `<h1>${tpl.name}</h1><p>Start customizing your email here...</p>`
+              });
+              setActiveTab("campaigns");
+            }} 
+          />
+        )}
+        {activeTab === "campaigns" && (
+          <CampaignsManager 
+            apiKey={TEST_API_KEY} 
+            initialData={pendingTemplate} 
+          />
+        )}
         {activeTab === "contacts" && <ContactsManager apiKey={TEST_API_KEY} />}
         {activeTab === "verification" && (
           <div className="animate-fade">

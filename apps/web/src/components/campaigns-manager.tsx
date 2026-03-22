@@ -1,21 +1,35 @@
 import { useState, useEffect } from "react";
 import { Megaphone, Plus, Rocket, Eye, Loader2, RefreshCw } from "lucide-react";
 
-export default function CampaignsManager({ apiKey }: { apiKey: string }) {
+export default function CampaignsManager({ apiKey, initialData }: { apiKey: string, initialData?: any }) {
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [lists, setLists] = useState<any[]>([]);
 
   // New Campaign State
-  const [showNew, setShowNew] = useState(false);
+  const [showNew, setShowNew] = useState(!!initialData);
   const [launching, setLaunching] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    name: initialData?.name || "",
     audienceListId: "",
-    subject: "",
-    html: ""
+    subject: initialData?.subject || "",
+    html: initialData?.html || ""
   });
   const [feedback, setFeedback] = useState<{type: 'success'|'error', msg: string} | null>(null);
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.name,
+        audienceListId: audienceListId || "",
+        subject: initialData.subject,
+        html: initialData.html
+      });
+      setShowNew(true);
+    }
+  }, [initialData]);
+
+  const audienceListId = lists[0]?.id;
 
   const fetchCampaigns = async () => {
     try {

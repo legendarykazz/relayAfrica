@@ -106,10 +106,10 @@ router.post('/launch', authMiddleware, async (req: Request, res: Response) => {
         name,
         audienceListId,
         templateId,
-        fromAddress: senderEmail,
+        fromAddress: senderEmail as any,
         status: 'QUEUED',
         sentCount: 0
-      }
+      } as any
     });
 
     // 3. Dispatch to BullMQ Queue
@@ -124,7 +124,7 @@ router.post('/launch', authMiddleware, async (req: Request, res: Response) => {
         }
       });
 
-      await emailQueue.add('send-campaign-email', {
+      await (emailQueue as any).add('send-campaign-email', {
         logId: log.id,
         to: contact.email,
         subject: template.subject,

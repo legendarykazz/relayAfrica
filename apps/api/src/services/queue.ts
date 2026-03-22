@@ -16,7 +16,12 @@ const sesClient = new SESClient({
 
 const connection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', {
   maxRetriesPerRequest: null,
+  lazyConnect: true // Prevent immediate crash if down
 }) as any;
+
+connection.on('error', (err: any) => {
+  console.error('--- REDIS CONNECTION ERROR ---', err.message);
+});
 
 export const emailQueue = new Queue('email-queue', { connection });
 

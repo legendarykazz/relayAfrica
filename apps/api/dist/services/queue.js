@@ -22,8 +22,8 @@ const connection = new ioredis_1.default(process.env.REDIS_URL || 'redis://local
 });
 exports.emailQueue = new bullmq_1.Queue('email-queue', { connection });
 exports.emailWorker = new bullmq_1.Worker('email-queue', async (job) => {
-    const { logId, to, subject, html } = job.data;
-    console.log(`Processing email to ${to} with subject: ${subject}`);
+    const { logId, to, subject, html, from } = job.data;
+    console.log(`Processing email to ${to} with subject: ${subject} (From: ${from || 'default'})`);
     try {
         if (!process.env.AWS_ACCESS_KEY_ID) {
             throw new Error('AWS_ACCESS_KEY_ID is missing');
@@ -37,7 +37,7 @@ exports.emailWorker = new bullmq_1.Worker('email-queue', async (job) => {
                 },
                 Subject: { Charset: "UTF-8", Data: subject },
             },
-            Source: process.env.AWS_SES_FROM_ADDRESS || 'Relay Africa <hello@relayafrica.com>',
+            Source: from || process.env.AWS_SES_FROM_ADDRESS || 'Relay Africa <hello@relayafrica.com>',
         });
         const data = await sesClient.send(command);
         // 2. Update log status to SENT

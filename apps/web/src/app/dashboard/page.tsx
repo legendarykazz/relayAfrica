@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, Key, History, LayoutDashboard, Settings, ChevronRight, Activity, Globe, ShieldCheck, Copy, Check, Send, AlertCircle, Loader2, Users, Megaphone, Layout } from "lucide-react";
+import { Mail, Key, History, LayoutDashboard, Settings, ChevronRight, Activity, Globe, ShieldCheck, Copy, Check, Send, AlertCircle, Loader2, Users, Megaphone, Layout, Menu } from "lucide-react";
 import MessagingSandbox from "@/components/messaging-sandbox";
 import ContactsManager from "@/components/contacts-manager";
 import CampaignsManager from "@/components/campaigns-manager";
@@ -10,6 +10,7 @@ import DomainManager from "@/components/domain-manager";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [pendingTemplate, setPendingTemplate] = useState<any>(null);
   const [statsData, setStatsData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
@@ -30,7 +31,7 @@ export default function Dashboard() {
     async function fetchData() {
       try {
         const [statsRes, userRes] = await Promise.all([
-          fetch("/api/stats", {
+          fetch("/api/overview", {
             headers: { Authorization: `Bearer ${TEST_API_KEY}` }
           }),
           fetch("/api/user/me", {
@@ -109,8 +110,7 @@ export default function Dashboard() {
 
   return (
     <div className="app-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
+      <aside className={`sidebar glass ${!isSidebarOpen ? 'collapsed' : ''}`}>
         <div className="sidebar-brand">Relay Africa</div>
         <nav className="nav-menu">
           {menuItems.map((item) => (
@@ -125,29 +125,39 @@ export default function Dashboard() {
           ))}
         </nav>
 
-        <div style={{ marginTop: 'auto', padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '1rem', fontSize: '0.8rem', color: '#64748b' }}>
+        <div style={{ marginTop: 'auto', padding: '0.75rem', background: 'var(--glass-bg)', border: '1px solid var(--border)', borderRadius: '0.75rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
           <p>Logged in as</p>
-          <p style={{ color: '#f8fafc', fontWeight: 600 }}>{userData?.email ?? "test@relayafrica.com"}</p>
+          <p style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{userData?.email ?? "test@relayafrica.com"}</p>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="content-area">
+        <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
+           <button 
+             onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+             className="btn-icon" 
+             style={{ background: 'var(--glass-bg)', border: '1px solid var(--border)', borderRadius: '0.5rem', padding: '0.5rem', cursor: 'pointer', color: 'var(--text-primary)', display: 'flex' }}
+           >
+             <Menu size={20} />
+           </button>
+        </div>
+        
         {activeTab === "dashboard" && (
           <div className="animate-fade">
-            <div className="header-row">
+            <div className="header-row animate-fade">
               <div>
                 <h1 className="page-title">Relay Center</h1>
-                <p style={{ color: '#94a3b8' }}>Monitor and manage your delivery infrastructure</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Monitor and manage your delivery infrastructure</p>
               </div>
               <div 
                 className="api-badge glass" 
                 onClick={copyToClipboard} 
-                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }}
+                style={{ cursor: 'pointer', padding: '0.5rem 1rem', transition: 'all 0.3s' }}
               >
-                {userData?.apiKey ? `re_live_...${userData.apiKey.slice(-6)}` : "re_live_......"}
-                {copied ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
-                {copied && <span style={{ fontSize: '10px', color: '#10b981', marginLeft: '4px' }}>Copied!</span>}
+                <Key size={14} color="var(--primary)" />
+                <span style={{ fontWeight: 700, fontSize: '0.8rem' }}>{userData?.apiKey ? `re_live_...${userData.apiKey.slice(-6)}` : "re_live_......"}</span>
+                {copied ? <Check size={14} color="#10b981" /> : <Copy size={14} color="var(--text-muted)" />}
               </div>
             </div>
 
@@ -180,15 +190,15 @@ export default function Dashboard() {
                     statsData.recentLogs.map((log: any) => (
                       <div key={log.id} className="log-item" onClick={() => setSelectedLog(log)} style={{ cursor: 'pointer' }}>
                         <div>
-                          <div style={{ fontSize: '0.95rem', fontWeight: 600 }}>{log.to}</div>
-                          <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{log.subject}</div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{log.to}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{log.subject}</div>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <div className={`status-pill ${log.status === 'SENT' ? 'status-sent' : log.status === 'FAILED' ? 'status-failed' : 'status-pending'}`}>
+                          <div className={`status-pill ${log.status === 'SENT' ? 'status-sent' : log.status === 'FAILED' ? 'status-failed' : 'status-pending'}`} style={{ fontSize: '0.65rem', padding: '0.2rem 0.6rem' }}>
                             {log.status}
                           </div>
-                          <div style={{ fontSize: '10px', color: '#64748b', marginTop: '4px' }}>
-                            {new Date(log.createdAt).toLocaleTimeString()}
+                          <div style={{ fontSize: '9px', color: '#64748b', marginTop: '2px' }}>
+                            {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </div>
                       </div>
@@ -200,24 +210,27 @@ export default function Dashboard() {
                   )}
                 </div>
                 
-                <div style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2rem' }}>
-                  <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: '#f8fafc' }}>Quick Test</h4>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border)' }}>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 800, marginBottom: '0.75rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Send size={16} color="var(--primary)" /> Quick Test Delivery
+                  </h4>
+                  <div style={{ display: 'flex', gap: '0.75rem' }}>
                     <input 
                       type="email" 
                       placeholder="Recipient email..." 
                       className="input-styled" 
                       id="test-email"
-                      style={{ fontSize: '0.85rem' }}
+                      style={{ flex: 1, fontSize: '0.85rem' }}
                     />
                     <button 
                       className="btn btn-primary"
+                      style={{ padding: '0 1rem', fontSize: '0.85rem' }}
                       onClick={async () => {
                         const input = (document.getElementById('test-email') as HTMLInputElement);
                         const to = input.value;
                         if (!to) return alert('Enter an email');
                         try {
-                          await fetch('/api/send', {
+                          const res = await fetch('/api/send', {
                             method: 'POST',
                             headers: { 
                               'Content-Type': 'application/json',
@@ -225,14 +238,16 @@ export default function Dashboard() {
                             },
                             body: JSON.stringify({ to, subject: 'Relay Africa Test', html: '<h1>It works!</h1>' })
                           });
+                          if (!res.ok) throw new Error('Failed');
                           alert('Test email queued!');
                           input.value = "";
                         } catch (e) {
-                          alert('Failed to queue email');
+                          alert('Failed to queue email. Check API logs.');
                         }
                       }}
                     >
-                      <Send size={16} />
+                      <span style={{ fontWeight: 800 }}>Send</span>
+                      <ChevronRight size={16} />
                     </button>
                   </div>
                 </div>
@@ -244,32 +259,32 @@ export default function Dashboard() {
         {activeTab === "logs" && (
           <div className="animate-fade">
             <h1 className="page-title">Delivery Logs</h1>
-            <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>Comprehensive history of all sent messages across channels</p>
+            <p style={{ color: '#94a3b8', marginBottom: '1rem', fontSize: '0.85rem' }}>Comprehensive history of all sent messages across channels</p>
             
             <div className="stats-container" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '1.5rem' }}>
               <button 
                 onClick={() => { setLogsType("email"); setLogsPage(1); }}
                 className={`panel glass ${logsType === 'email' ? 'active-glow' : ''}`}
-                style={{ padding: '1rem', textAlign: 'center', transition: 'all 0.3s', border: logsType === 'email' ? '1px solid #6366f1' : '1px solid rgba(255,255,255,0.05)' }}
+                style={{ padding: '0.75rem', textAlign: 'center', transition: 'all 0.3s', border: logsType === 'email' ? '1px solid var(--primary)' : '1px solid var(--border)', cursor: 'pointer' }}
               >
-                <Mail size={20} style={{ marginBottom: '8px', color: logsType === 'email' ? '#6366f1' : '#64748b' }} />
-                <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Emails</div>
+                <Mail size={18} style={{ margin: '0 auto 6px', color: logsType === 'email' ? 'var(--primary)' : 'var(--text-muted)' }} />
+                <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>Emails</div>
               </button>
               <button 
                 onClick={() => { setLogsType("sms"); setLogsPage(1); }}
                 className={`panel glass ${logsType === 'sms' ? 'active-glow' : ''}`}
-                style={{ padding: '1rem', textAlign: 'center', transition: 'all 0.3s', border: logsType === 'sms' ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.05)' }}
+                style={{ padding: '0.75rem', textAlign: 'center', transition: 'all 0.3s', border: logsType === 'sms' ? '1px solid #10b981' : '1px solid var(--border)', cursor: 'pointer' }}
               >
-                <Activity size={20} style={{ marginBottom: '8px', color: logsType === 'sms' ? '#10b981' : '#64748b' }} />
-                <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>SMS</div>
+                <Activity size={18} style={{ margin: '0 auto 6px', color: logsType === 'sms' ? '#10b981' : 'var(--text-muted)' }} />
+                <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>SMS</div>
               </button>
               <button 
                 onClick={() => { setLogsType("whatsapp"); setLogsPage(1); }}
                 className={`panel glass ${logsType === 'whatsapp' ? 'active-glow' : ''}`}
-                style={{ padding: '1rem', textAlign: 'center', transition: 'all 0.3s', border: logsType === 'whatsapp' ? '1px solid #ec4899' : '1px solid rgba(255,255,255,0.05)' }}
+                style={{ padding: '0.75rem', textAlign: 'center', transition: 'all 0.3s', border: logsType === 'whatsapp' ? '1px solid #ec4899' : '1px solid var(--border)', cursor: 'pointer' }}
               >
-                <Send size={20} style={{ marginBottom: '8px', color: logsType === 'whatsapp' ? '#ec4899' : '#64748b' }} />
-                <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>WhatsApp</div>
+                <Send size={18} style={{ margin: '0 auto 6px', color: logsType === 'whatsapp' ? '#ec4899' : 'var(--text-muted)' }} />
+                <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>WhatsApp</div>
               </button>
             </div>
 
@@ -362,7 +377,7 @@ export default function Dashboard() {
         {activeTab === "verification" && (
           <div className="animate-fade">
             <h1 className="page-title">Infrastructure Center</h1>
-            <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>Secure your sending reputation by verifying your domains and managing DNS records.</p>
+            <p style={{ color: '#94a3b8', marginBottom: '1rem', fontSize: '0.85rem' }}>Secure your sending reputation by verifying your domains and managing DNS records.</p>
             <DomainManager apiKey={TEST_API_KEY} />
           </div>
         )}
@@ -370,13 +385,13 @@ export default function Dashboard() {
           <div className="animate-fade panel glass">
             <h1 className="page-title">API Configuration</h1>
             <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>Manage your programmatic access to Relay Africa.</p>
-            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ background: 'var(--glass-bg)', padding: '1.5rem', borderRadius: '0.5rem', border: '1px solid var(--border)' }}>
                <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>Live Secret Key</h3>
                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                  <input type="text" readOnly value={userData?.apiKey || "Loading..."} className="input-styled" style={{ fontFamily: 'monospace', width: '100%', maxWidth: '400px' }} />
                  <button className="btn btn-primary" onClick={copyToClipboard}>{copied ? "Copied!" : "Copy Key"}</button>
                </div>
-               <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '1rem' }}>Keep this key secret. Never expose it in client-side code.</p>
+               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '1rem' }}>Keep this key secret. Never expose it in client-side code.</p>
             </div>
           </div>
         )}
@@ -419,9 +434,9 @@ export default function Dashboard() {
               <button 
                 onClick={() => setSelectedLog(null)}
                 className="btn-icon"
-                style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '50%', padding: '0.5rem' }}
+                style={{ background: 'var(--glass-bg)', border: '1px solid var(--border)', borderRadius: '50%', padding: '0.5rem', cursor: 'pointer' }}
               >
-                <AlertCircle size={20} style={{ transform: 'rotate(45deg)' }} />
+                <AlertCircle size={20} style={{ transform: 'rotate(45deg)', color: 'var(--text-secondary)' }} />
               </button>
             </div>
             

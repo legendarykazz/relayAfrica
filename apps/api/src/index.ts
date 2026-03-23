@@ -28,7 +28,7 @@ app.all('*', (req, res, next) => {
 
 app.use('/api/logs', logsRoutes);
 
-app.use('/api/stats', statsRoutes);
+app.use('/api/overview', statsRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/domain', domainRoutes);
 app.use('/api/contacts', contactsRoutes);

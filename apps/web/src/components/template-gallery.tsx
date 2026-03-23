@@ -7,7 +7,6 @@ const PRESET_TEMPLATES = [
     name: "Corporate Nexus",
     tag: "Finance",
     category: "Business",
-    isPro: true,
     preview: "/templates/nexus.png",
     colors: ["#2563eb", "#0f172a", "#f8fafc"],
     description: "High-impact blue theme with icon-driven feature grids and professional trust elements."
@@ -17,7 +16,6 @@ const PRESET_TEMPLATES = [
     name: "Aura Resort",
     tag: "Hospitality",
     category: "Landing Page",
-    isPro: true,
     preview: "/templates/aura.png",
     colors: ["#7c3aed", "#2d1b4e", "#ffffff"],
     description: "Deep violet palette with overlapping image cards and immersive luxury vibes."
@@ -27,7 +25,6 @@ const PRESET_TEMPLATES = [
     name: "Mailto Prime",
     tag: "Ecommerce",
     category: "System",
-    isPro: true,
     preview: "/templates/mailto.png",
     colors: ["#000000", "#ffffff", "#f1f5f9"],
     description: "Clean, structured ecommerce layout for high-clarity transactional messaging."
@@ -37,7 +34,6 @@ const PRESET_TEMPLATES = [
     name: "Founder's Memo",
     tag: "Newsletter",
     category: "Personal",
-    isPro: false,
     preview: "/templates/founder.png",
     colors: ["#0f172a", "#f8fafc", "#ffffff"],
     description: "A sophisticated, personal-touch template for important leadership updates."
@@ -47,7 +43,6 @@ const PRESET_TEMPLATES = [
     name: "Visionary Launch",
     tag: "Landing Page",
     category: "Marketing",
-    isPro: true,
     preview: "/templates/launch.png",
     colors: ["#4f46e5", "#ec4899", "#0f172a"],
     description: "High-impact gradients and bold call-to-actions inspired by modern landing pages."
@@ -57,7 +52,6 @@ const PRESET_TEMPLATES = [
     name: "Clean Flow",
     tag: "Transactional",
     category: "System",
-    isPro: false,
     preview: "/templates/transactional.png",
     colors: ["#ffffff", "#f8fafc", "#64748b"],
     description: "Ultra-clean design focused on information hierarchy for receipts and OTPs."
@@ -113,7 +107,7 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
     return (
       <div className="animate-fade" style={{ 
         position: 'fixed', inset: 0, zIndex: 1000, 
-        background: '#020617', display: 'flex', flexDirection: 'column',
+        background: 'var(--bg-main)', display: 'flex', flexDirection: 'column',
         padding: '1.5rem'
       }}>
         {/* Full-Screen Editor Toolbar - Functionalized */}
@@ -148,20 +142,22 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
             <div style={{ position: 'relative' }}>
               <button 
-                className={`btn-icon ${!showSidebars ? 'btn-primary' : 'glass'}`} 
+                className="btn-icon" 
                 onClick={() => setShowSidebars(!showSidebars)}
                 style={{ 
                   borderRadius: '0.8rem', width: '3.5rem', height: '3.5rem',
-                  border: !showSidebars ? 'none' : '2px solid var(--primary)',
-                  boxShadow: !showSidebars ? 'none' : '0 0 15px rgba(99, 102, 241, 0.4)',
-                  animation: showSidebars ? 'pulse 2s infinite' : 'none'
+                  background: !showSidebars ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+                  border: '1px solid var(--border)',
+                  color: !showSidebars ? 'white' : 'var(--text-secondary)',
+                  boxShadow: !showSidebars ? '0 0 15px rgba(59, 130, 246, 0.4)' : 'none',
+                  transition: 'all 0.3s'
                 }}
               >
                  <Layout size={24} />
               </button>
               {showSidebars && (
-                <div style={{ position: 'absolute', top: '-110%', left: '50%', transform: 'translateX(-50%)', background: 'var(--primary)', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.6rem', fontSize: '0.75rem', fontWeight: 900, whiteSpace: 'nowrap', pointerEvents: 'none' }}>
-                   FULL SCREEN
+                <div style={{ position: 'absolute', top: '-110%', left: '50%', transform: 'translateX(-50%)', background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.6rem', fontSize: '0.75rem', fontWeight: 900, whiteSpace: 'nowrap', pointerEvents: 'none' }}>
+                   TOGGLE FULL SCREEN
                 </div>
               )}
             </div>
@@ -185,20 +181,23 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
           {/* FLOATING QUICK-EDIT (Visible in Focus Mode) */}
           {!showSidebars && (
             <div className="animate-fade-in" style={{ 
-               position: 'fixed', top: '15rem', right: '4rem', zIndex: 100,
-               display: 'flex', flexDirection: 'column', gap: '1rem'
+               position: 'fixed', top: '2rem', right: '4rem', zIndex: 100,
+               display: 'flex', alignItems: 'center', gap: '1rem',
+               background: 'var(--glass-bg)', backdropFilter: 'blur(20px)',
+               padding: '1rem 1.5rem', borderRadius: '1.5rem', border: '1px solid var(--border)'
             }}>
-               <div className="glass" style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid var(--primary)' }}>
-                  <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 900, color: '#94a3b8', marginBottom: '0.5rem' }}>QUICK URL</label>
+               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 900, color: '#94a3b8' }}>URL</label>
                   <input 
                     type="text" 
                     value={buttonLink} 
                     onChange={(e) => setButtonLink(e.target.value)}
-                    style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '0.4rem 0', outline: 'none', width: '150px' }}
+                    style={{ background: 'transparent', border: 'none', borderBottom: '1px solid var(--border)', color: 'white', padding: '0.4rem 0', outline: 'none', width: '200px', fontSize: '0.85rem' }}
                   />
                </div>
-               <button onClick={() => setShowSidebars(true)} className="btn btn-primary" style={{ padding: '0.8rem', borderRadius: '1rem' }}>
-                 <ArrowLeft size={20} />
+               <div style={{ width: '1px', height: '20px', background: 'var(--border)' }}></div>
+               <button onClick={() => setShowSidebars(true)} className="btn btn-secondary" style={{ padding: '0.6rem 1.2rem', borderRadius: '1rem', fontSize: '0.85rem' }}>
+                 Exit Full Screen <ArrowLeft size={16} />
                </button>
             </div>
           )}
@@ -233,16 +232,16 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
 
           {/* 2. MAIN CANVAS - THE "BIG" FULL PAGE EXPERIENCE */}
           <div style={{ 
-            display: 'flex', flexDirection: 'column', overflowY: 'auto', background: '#0a0f1e', 
-            borderRadius: showSidebars ? '2.5rem' : '1rem', border: '1px solid rgba(255,255,255,0.03)', padding: '3rem 0', 
-            position: 'relative', boxShadow: 'inset 0 0 100px rgba(0,0,0,0.5)', 
+            display: 'flex', flexDirection: 'column', overflowY: 'auto', background: '#050505', 
+            borderRadius: showSidebars ? '2.5rem' : '1.5rem', border: '1px solid var(--border)', padding: '3rem 0', 
+            position: 'relative', boxShadow: 'inset 0 0 100px rgba(0,0,0,0.8)', 
             transition: '0.5s cubic-bezier(0.4, 0, 0.2, 1)'
           }}>
              <div style={{ 
-               width: '100%', maxWidth: showSidebars ? '850px' : '950px', margin: '0 auto', background: '#ffffff', 
-               boxShadow: '0 50px 120px rgba(0,0,0,0.8)', borderRadius: '4px', 
-               minHeight: '1300px', display: 'flex', flexDirection: 'column',
-               transition: '0.5s'
+               width: '100%', maxWidth: showSidebars ? '850px' : '1000px', margin: '0 auto', background: '#ffffff', 
+               boxShadow: '0 40px 100px rgba(0,0,0,0.9)', borderRadius: '8px', 
+               minHeight: '1100px', display: 'flex', flexDirection: 'column',
+               transition: '0.5s', overflow: 'hidden'
              }}>
                 <div style={{ height: '8px', background: accentColor }}></div>
                 
@@ -267,6 +266,12 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
                         {block.type === 'text' && (
                           <p 
                             contentEditable 
+                            suppressContentEditableWarning
+                            onBlur={(e) => {
+                               const newBlocks = [...blocks];
+                               newBlocks[index].content = e.currentTarget.innerText;
+                               setBlocks(newBlocks);
+                            }}
                             style={{ fontSize: '1.2rem', lineHeight: 1.6, color: '#475569', outline: 'none' }}
                           >
                              {block.content}
@@ -311,9 +316,9 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
           </div>
 
           {/* 3. SETTINGS & STYLES */}
-          <div className="panel glass" style={{ padding: '2rem', overflowY: 'auto', borderRadius: '1.8rem', opacity: showSidebars ? 1 : 0, pointerEvents: showSidebars ? 'all' : 'none', transition: '0.3s' }}>
-            <h4 style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748b', marginBottom: '2rem' }}>Block Controls</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          <div className="panel glass" style={{ padding: '1rem', overflowY: 'auto', borderRadius: '1rem', opacity: showSidebars ? 1 : 0, pointerEvents: showSidebars ? 'all' : 'none', transition: '0.3s' }}>
+            <h4 style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748b', marginBottom: '1rem' }}>Block Controls</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', marginBottom: '1rem' }}>CTA LINK</label>
                  <input 
@@ -385,22 +390,22 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
 
   return (
     <div className="animate-fade">
-      <div style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
-          <h1 className="page-title">Design Gallery</h1>
-          <p style={{ color: '#94a3b8' }}>Select a starting point for your next message. Optimized for all devices.</p>
+          <h1 className="page-title" style={{ fontSize: '1.4rem' }}>Design Gallery</h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Select a starting point for your next message. Optimized for all devices.</p>
         </div>
         
-        <div className="glass" style={{ display: 'flex', padding: '0.4rem', borderRadius: '0.8rem', border: '1px solid var(--glass-border)' }}>
+        <div className="glass" style={{ display: 'flex', padding: '0.3rem', borderRadius: '0.5rem', border: '1px solid var(--glass-border)' }}>
           {CATEGORIES.map(cat => (
             <button 
               key={cat}
               onClick={() => setActiveCategory(cat)}
               style={{ 
-                padding: '0.6rem 1.2rem', borderRadius: '0.5rem', border: 'none', 
+                padding: '0.4rem 0.8rem', borderRadius: '0.3rem', border: 'none', 
                 background: activeCategory === cat ? 'var(--primary)' : 'transparent', 
                 color: activeCategory === cat ? 'white' : 'var(--text-muted)',
-                fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', transition: '0.3s'
+                fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', transition: '0.3s'
               }}
             >
               {cat}
@@ -409,33 +414,28 @@ export default function TemplateGallery({ onSelect }: { onSelect?: (template: an
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
         {filteredTemplates.map((t, i) => (
-          <div key={t.id} className="panel glass animate-fade" style={{ padding: 0, overflow: 'hidden', transition: '0.3s', borderRadius: '1.5rem', animationDelay: `${i * 0.1}s`, border: t.isPro ? '1px solid rgba(236, 72, 153, 0.3)' : '1px solid var(--glass-border)' }}>
-            <div style={{ height: '200px', background: `linear-gradient(135deg, ${t.colors[0]}22, ${t.colors[1]}22)`, display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)', position: 'relative' }}>
+          <div key={t.id} className="panel glass animate-fade" style={{ padding: 0, overflow: 'hidden', transition: '0.3s', borderRadius: '1.2rem', animationDelay: `${i * 0.1}s`, border: '1px solid var(--border)', background: 'var(--bg-card)' }}>
+            <div style={{ height: '220px', background: `linear-gradient(135deg, ${t.colors[0]}22, ${t.colors[1]}22)`, display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid var(--border)', position: 'relative' }}>
                <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '0.5rem' }}>
-                  {t.isPro && (
-                    <div style={{ background: 'linear-gradient(to right, #ec4899, #8b5cf6)', padding: '0.3rem 0.8rem', borderRadius: '1rem', fontSize: '0.65rem', fontWeight: 800, color: 'white', letterSpacing: '0.05em', boxShadow: '0 4px 12px rgba(236, 72, 153, 0.3)' }}>
-                      PRO
-                    </div>
-                  )}
-                  <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.3rem 0.8rem', borderRadius: '1rem', fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', backdropFilter: 'blur(4px)' }}>
+                  <div style={{ background: 'var(--glass-bg)', padding: '0.4rem 1rem', borderRadius: '1rem', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)', backdropFilter: 'blur(4px)', border: '1px solid var(--glass-border)' }}>
                     {t.tag}
                   </div>
                </div>
-               <div style={{ fontSize: '1.2rem', fontWeight: 800, color: t.colors[0], opacity: 0.6 }}>PREVIEW</div>
+               <div style={{ fontSize: '1.4rem', fontWeight: 900, color: t.colors[0], opacity: 0.8, letterSpacing: '0.05em' }}>PREVIEW</div>
             </div>
-            <div style={{ padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ padding: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-primary)' }}>
                 {t.name}
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '2rem' }}>{t.description}</p>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>{t.description}</p>
               <button 
-                className={`btn ${t.isPro ? 'btn-primary' : 'btn-secondary'}`} 
-                style={{ width: '100%', padding: '0.8rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
+                className="btn btn-secondary" 
+                style={{ width: '100%', padding: '0.8rem', fontSize: '0.9rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
                 onClick={() => handleSelect(t)}
               >
-                {t.isPro ? 'Customize with Pro' : 'Customize Template'} <Plus size={16} />
+                Customize Template <ArrowLeft size={16} style={{ transform: 'rotate(135deg)' }} />
               </button>
             </div>
           </div>

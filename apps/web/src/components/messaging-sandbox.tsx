@@ -75,39 +75,39 @@ export default function MessagingSandbox({ apiKey }: { apiKey: string }) {
   return (
     <div className="animate-fade">
       <h1 className="page-title">Messaging Sandbox</h1>
-      <p style={{ color: "#94a3b8", marginBottom: "2rem" }}>
+      <p style={{ color: "#94a3b8", marginBottom: "1rem", fontSize: "0.85rem" }}>
         Simulate real-time message delivery and 2FA authentication flows across all channels.
       </p>
 
-      <div style={{ display: "flex", gap: "2rem", flexDirection: "row", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "1rem", flexDirection: "row", flexWrap: "wrap" }}>
         {/* Settings Panel */}
-        <div className="panel glass" style={{ flex: "1 1 300px", alignSelf: "flex-start" }}>
-          <h3 style={{ fontSize: "1.1rem", marginBottom: "1.5rem", fontWeight: 600 }}>Configuration</h3>
+        <div className="panel glass" style={{ flex: "1 1 280px", alignSelf: "flex-start" }}>
+          <h3 style={{ fontSize: "0.95rem", marginBottom: "0.75rem", fontWeight: 600 }}>Configuration</h3>
           
-          <div style={{ marginBottom: "1.5rem" }}>
-            <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.5rem" }}>API Mode</label>
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={{ display: "block", fontSize: "0.75rem", color: "#94a3b8", marginBottom: "0.3rem" }}>API Mode</label>
             <div style={{ display: "flex", gap: "0.5rem", background: "rgba(255,255,255,0.03)", padding: "0.3rem", borderRadius: "0.5rem" }}>
               <button 
-                onClick={() => { setMode("direct"); setFeedback(null); }}
-                style={{ flex: 1, padding: "0.5rem", borderRadius: "0.3rem", fontSize: "0.85rem", transition: "all 0.2s",
+                onClick={async () => { setMode("direct"); setFeedback(null); }}
+                style={{ flex: 1, padding: "0.4rem", borderRadius: "0.3rem", fontSize: "0.75rem", transition: "all 0.2s",
                 background: mode === "direct" ? "rgba(255,255,255,0.1)" : "transparent",
                 color: mode === "direct" ? "#fff" : "#94a3b8", border: "none", cursor: "pointer" }}
               >
-                Direct Message
+                Direct
               </button>
               <button 
-                onClick={() => { setMode("otp"); setFeedback(null); setOtpSent(false); }}
-                style={{ flex: 1, padding: "0.5rem", borderRadius: "0.3rem", fontSize: "0.85rem", transition: "all 0.2s",
+                onClick={async () => { setMode("otp"); setFeedback(null); setOtpSent(false); }}
+                style={{ flex: 1, padding: "0.4rem", borderRadius: "0.3rem", fontSize: "0.75rem", transition: "all 0.2s",
                 background: mode === "otp" ? "rgba(255,255,255,0.1)" : "transparent",
                 color: mode === "otp" ? "#fff" : "#94a3b8", border: "none", cursor: "pointer" }}
               >
-                OTP Verification
+                OTP 
               </button>
             </div>
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.5rem" }}>Channel</label>
+            <label style={{ display: "block", fontSize: "0.75rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Channel</label>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {[
                 { id: "email", label: "Email", icon: Mail, color: "#6366f1" },
@@ -118,10 +118,11 @@ export default function MessagingSandbox({ apiKey }: { apiKey: string }) {
                   key={c.id}
                   onClick={() => setChannel(c.id as any)}
                   style={{
-                    display: "flex", alignItems: "center", gap: "0.8rem", padding: "0.8rem 1rem",
-                    borderRadius: "0.5rem", background: channel === c.id ? `${c.color}15` : "rgba(255,255,255,0.02)",
+                    display: "flex", alignItems: "center", gap: "0.6rem", padding: "0.5rem 0.75rem",
+                    borderRadius: "0.4rem", background: channel === c.id ? `${c.color}15` : "rgba(255,255,255,0.02)",
                     border: channel === c.id ? `1px solid ${c.color}` : "1px solid rgba(255,255,255,0.05)",
-                    color: channel === c.id ? "#fff" : "#94a3b8", cursor: "pointer", transition: "all 0.2s"
+                    color: channel === c.id ? "#fff" : "#94a3b8", cursor: "pointer", transition: "all 0.2s",
+                    fontSize: '0.8rem'
                   }}
                 >
                   <c.icon size={18} color={channel === c.id ? c.color : "#64748b"} />
@@ -134,19 +135,20 @@ export default function MessagingSandbox({ apiKey }: { apiKey: string }) {
 
         {/* Action Panel */}
         <div className="panel glass" style={{ flex: "2 1 400px" }}>
-          <h3 style={{ fontSize: "1.1rem", marginBottom: "1.5rem", fontWeight: 600 }}>Payload & Execution</h3>
+          <h3 style={{ fontSize: "0.95rem", marginBottom: "0.75rem", fontWeight: 600 }}>Payload & Execution</h3>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
             <div>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.5rem" }}>
-                Recipient {channel === "email" ? "Email Address" : "Phone Number (with country code)"}
+              <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.4rem" }}>
+                Recipient {channel === "email" ? "Email" : "Phone"}
               </label>
               <input
                 type={channel === "email" ? "email" : "tel"}
                 className="input-styled"
-                placeholder={channel === "email" ? "user@example.com" : "+2348000000000"}
+                placeholder={channel === "email" ? "user@example.com" : "+234..."}
                 value={to}
                 onChange={e => setTo(e.target.value)}
+                style={{ padding: '0.6rem 0.8rem', fontSize: '0.9rem' }}
               />
             </div>
 
@@ -154,28 +156,28 @@ export default function MessagingSandbox({ apiKey }: { apiKey: string }) {
               <>
                 {channel === "email" && (
                   <div>
-                    <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.5rem" }}>Subject</label>
-                    <input type="text" className="input-styled" placeholder="Hello from Relay Africa!" value={subject} onChange={e => setSubject(e.target.value)} />
+                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.4rem" }}>Subject</label>
+                    <input type="text" className="input-styled" placeholder="Subject..." value={subject} onChange={e => setSubject(e.target.value)} style={{ padding: '0.6rem 0.8rem', fontSize: '0.9rem' }} />
                   </div>
                 )}
                 <div>
-                  <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.5rem" }}>Message Body</label>
+                  <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.4rem" }}>Message Body</label>
                   <textarea 
                     className="input-styled" 
                     rows={4} 
-                    placeholder="Enter your message..." 
+                    placeholder="Enter message..." 
                     value={content} 
                     onChange={e => setContent(e.target.value)}
-                    style={{ resize: "vertical" }}
+                    style={{ resize: "vertical", padding: '0.6rem 0.8rem', fontSize: '0.9rem' }}
                   />
                 </div>
               </>
             )}
 
             {mode === "otp" && otpSent && (
-              <div style={{ background: "rgba(99, 102, 241, 0.1)", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid rgba(99, 102, 241, 0.2)" }}>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#a5b4fc", marginBottom: "0.5rem" }}>Verification Code</label>
-                <div style={{ display: "flex", gap: "1rem" }}>
+              <div style={{ background: "rgba(99, 102, 241, 0.1)", padding: "1rem", borderRadius: "0.5rem", border: "1px solid rgba(99, 102, 241, 0.2)" }}>
+                <label style={{ display: "block", fontSize: "0.75rem", color: "#a5b4fc", marginBottom: "0.4rem" }}>Verification Code</label>
+                <div style={{ display: "flex", gap: "0.75rem" }}>
                   <input
                     type="text"
                     className="input-styled"
@@ -183,7 +185,7 @@ export default function MessagingSandbox({ apiKey }: { apiKey: string }) {
                     value={otpCode}
                     onChange={e => setOtpCode(e.target.value)}
                     maxLength={6}
-                    style={{ fontSize: "1.2rem", letterSpacing: "4px", textAlign: "center", fontFamily: "monospace" }}
+                    style={{ fontSize: "1rem", letterSpacing: "2px", textAlign: "center", fontFamily: "monospace", padding: '0.5rem' }}
                   />
                 </div>
               </div>
@@ -204,10 +206,10 @@ export default function MessagingSandbox({ apiKey }: { apiKey: string }) {
               className="btn btn-primary" 
               onClick={handleSend}
               disabled={loading}
-              style={{ padding: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", marginTop: "1rem" }}
+              style={{ padding: "0.75rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", marginTop: "1rem", width: '100%', fontSize: '0.9rem', fontWeight: 800 }}
             >
               {loading ? <Loader2 className="animate-spin" size={20} /> : mode === "otp" && otpSent ? <ShieldCheck size={20} /> : <Send size={20} />}
-              {loading ? "Processing..." : mode === "otp" ? (otpSent ? "Verify Code" : "Request OTP") : "Send Message"}
+              {loading ? "Processing..." : mode === "otp" ? (otpSent ? "Verify" : "Request OTP") : "Send"}
             </button>
             
             {mode === "otp" && otpSent && (
